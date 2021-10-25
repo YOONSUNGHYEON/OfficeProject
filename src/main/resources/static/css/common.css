@@ -1,0 +1,76 @@
+body {
+	margin: 0px;
+}
+
+#topMenu {
+	background-color: #d9d9d9;
+	height: 70px;
+	width: 100%;
+}
+
+ul {
+	height: 70px;
+	padding-left: 0px;
+	margin: 0px;
+}
+
+#topMenu ul li {
+	height: 70px;
+	list-style: none;
+	color: white;
+	float: left;
+	text-align: center;
+	list-style: none;
+}
+
+#topMenu .menuLink {
+	text-decoration: none;
+	color: black;
+	display: inline-block;
+	line-height: 70px;
+	width: 120px;
+	font-size: 14px;
+	font-weight: bold;
+	width: 120px;
+}
+
+#topMenu .active {
+	color: rgb(150, 199, 69);
+}
+
+#topMenu .menuLink:hover {
+	color: white;
+	background-color: #8bbd39;
+}
+
+#img-logo {
+	margin: 5px 20px;
+}
+
+address, em {
+    font-style: normal;
+}
+footer {
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+	height: 200px;
+	width: 100%;
+	color: black;
+	text-align: center;
+	margin-top: 20px;
+    font-size: 10px;
+    color: #666;
+    font-family: -apple-system, BlinkMacSystemFont, tahoma, Dotum, gulim,"Apple SD Gothic Neo", Helvetica, Sans-serif;
+}
+
+.buttonGroup{
+	text-align :center;
+}
+
+button {
+	padding : 5px;
+	background-color : #dddddd;
+	border:0;
+	outline:0;
+}
