@@ -1,10 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="EUC-KR">
-<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/css/linkProduct.css" />
+<title>상품 링크</title>
 </head>
 <body>
+	<nav id="topMenu">
+		<ul>
+			<li><img id="img-logo" src="image/danawalogo.gif" alt="다나와 로고"></li>
+			<li><a class="menuLink " href="http://192.168.56.106/DanawaOfficeProject/createStandardProduct.html">기준상품등록</a></li>
+			<li><a class="menuLink" href="http://192.168.56.106/DanawaOfficeProject/createCooperationProduct.html">협력사상품등록</a></li>
+			<li><a class="menuLink active" href="http://localhost:9090/link">상품링크</a></li>
+			<li><a class="menuLink" href="http://192.168.56.106/DanawaOfficeProject/productParsing.html">상품정보 파싱</a></li>
+			<li><a class="menuLink" href="/excel">엑셀파일등록</a></li>
+		</ul>
+	</nav>
+	<div id="linkContent">
+		<h3>상품 링크</h3>
+		<table id="optionTable">
+			<tbody>
+				<tr>
+					<td colspan="2">
+						<label>
+							<input type="radio" name="link" value="0">
+							<span class="blueText" >
+							링크된상품
+							</span>
+						</label>
+						<label>
+							<input class="blueText" type="radio" name="link" value="1">
+							<span class="blueText" >
+							링크안된상품
+							</span>
+						</label>
+						<label>
+							<input type='checkbox' name='linkedProduct' value='2'>
+							링크상품보기
+						</label>
 
+					</td>
+				</tr>
+
+				<tr>
+					<th>카테고리</th>
+					<td>
+						<div>
+							<select class="shortInput" name="categorySelect" id="categorySelect">
+								<option value="none">카테고리</option>
+							</select>
+							<button class="btn whiteBtn radiusBtn" onClick="findListByCategorySeq();" type="button">검색</button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<form action="">
+			<div class="main-layout">
+				<div class="layout-left">
+					<span class="btn">기준 상품</span>
+					<button class="btn" onclick="download(1);" type="button">엑셀 다운로드</button>
+
+					<div style="overflow: auto; height: 650px;">
+						<table  border="1" id="standardProductTable">
+							<thead id="standardProductThead">
+								<tr>
+									<th>카테고리</th>
+									<th>상품 명</th>
+									<th>ⓘ</th>
+									<th>ⓤ</th>
+									<th>통합 최저가</th>
+									<th>PC 최저가</th>
+									<th>모바일 최저가</th>
+									<th>평균가</th>
+									<th>업체</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="standardProductTbody"></tbody>
+						</table>
+					</div>
+					<div class="pagination" id="standardPagination"></div>
+				</div>
+				<div class="layout-right">
+					<span class="btn">협력사 상품</span>
+					<button class="btn" onclick="download(2);" type="button">엑셀 다운로드</button>
+					<div style="overflow: auto; height: 650px;">
+						<table id="cooperationProductTable" border="1">
+							<thead id="cooperationProductThead">
+								<tr>
+									<th></th>
+									<th>협력사</th>
+									<th>카테고리</th>
+									<th>상품명</th>
+									<th>ⓘ</th>
+									<th>ⓤ</th>
+									<th>PC 가격</th>
+									<th>모바일 가격</th>
+									<th>최초등록</th>
+								</tr>
+							</thead>
+							<tbody id="cooperationProductTbody"></tbody>
+						</table>
+					</div>
+					<div class="pagination" id="cooperationPagination"></div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<footer>
+		<address>
+			Copyright © <strong>danawa</strong> Co., Ltd. All Rights Reserved.
+		</address>
+	</footer>
 </body>
 </html>

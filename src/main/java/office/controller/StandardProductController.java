@@ -1,12 +1,24 @@
 package office.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import lombok.RequiredArgsConstructor;
+import office.dto.StandardProductDTO;
+
+@RestController
+@RequiredArgsConstructor
 public class StandardProductController {
-	@GetMapping(value={"/" , "/standardProduct"})
-	public String create() {
-		return "/createStandardProduct";
-	}
+
+	private static final Logger log = LoggerFactory.getLogger(StandardProductController.class);
+
+	@PostMapping(value = "/standardProducts")
+    public void create(@RequestBody StandardProductDTO standardProductDTO) {
+		String name = standardProductDTO.getName();
+		String date = standardProductDTO.getManufactureDate();
+		log.info(name);
+    }
 }
