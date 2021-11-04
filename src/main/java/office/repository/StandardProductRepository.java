@@ -1,5 +1,13 @@
 package office.repository;
 
-public class StandardProductRepository {
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import office.entity.StandardProduct;
+
+public interface StandardProductRepository extends JpaRepository<StandardProduct, String>{
+
+	List<StandardProduct> findByCategorySeq(long categorySeq);
 
 }

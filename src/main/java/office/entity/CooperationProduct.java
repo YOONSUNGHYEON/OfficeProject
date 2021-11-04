@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
-@Table(name = "tCooperationProduct")
+@Table(name = "tCooperationProductList")
 public class CooperationProduct implements Serializable{
 	@Id
 	@Column(name="sCooperationProductSeq", updatable=false)

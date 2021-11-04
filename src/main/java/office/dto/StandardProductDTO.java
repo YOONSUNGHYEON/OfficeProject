@@ -1,24 +1,25 @@
 package office.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class StandardProductDTO {
-	private int seq;
-	private int categorySeq;
+	private String seq;
+	private Long categorySeq;
 	private String name;
-	private String imageSource;
-	private String imageSourceURL;
+	private String imageURL;
 	private String manufactureDate;
-	//private int lowestPrice;
-	//private int mobileLowestPrice;
-	//private int averagePrice;
-	//private int cooperationComanyCount;
-
-	public StandardProductDTO() {
-
-	}
-
+	private int lowestPrice;
+	private int mobileLowestPrice;
+	private int averagePrice;
+	private int cooperationComanyCount;
 }

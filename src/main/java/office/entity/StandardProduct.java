@@ -9,18 +9,20 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 
-import groovy.transform.builder.Builder;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import office.dto.StandardProductDTO;
 
 @Getter
 @Entity
-@Builder
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "tStandardProduct")
+@AllArgsConstructor
+@Builder
+@Table(name = "tStandardProductList")
 public class StandardProduct {
 	@Id
 	@Column(name = "sStandardProductSeq", updatable = false)
@@ -54,7 +56,25 @@ public class StandardProduct {
 	@Column(name = "nMobileLowestPrice")
 	private int mobileLowestPrice;
 
+	@Column(name = "nAveragePrice")
+	private int averagePrice;
+
 	@Column(name = "nCooperationCompayCount")
 	private int cooperationCompayCount;
+
+
+
+	public StandardProductDTO toDTO() {
+		return StandardProductDTO.builder()
+				.seq(seq)
+				.categorySeq(category.getSeq())
+				.name(name)
+				.imageURL(imageURL)
+				.lowestPrice(lowestPrice)
+				.mobileLowestPrice(mobileLowestPrice)
+				.averagePrice(averagePrice)
+				.cooperationComanyCount(cooperationCompayCount)
+				.build();
+	}
 
 }

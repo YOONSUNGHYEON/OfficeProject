@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="/css/common.css" />
 <link rel="stylesheet" type="text/css" href="/css/linkProduct.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <title>상품 링크</title>
 </head>
 <body>
@@ -30,7 +31,7 @@
 							</span>
 						</label>
 						<label>
-							<input class="blueText" type="radio" name="link" value="1">
+							<input type="radio" name="link" value="1">
 							<span class="blueText" >
 							링크안된상품
 							</span>
@@ -50,7 +51,7 @@
 							<select class="shortInput" name="categorySelect" id="categorySelect">
 								<option value="none">카테고리</option>
 							</select>
-							<button class="btn whiteBtn radiusBtn" onClick="findListByCategorySeq();" type="button">검색</button>
+							<button class="btn whiteBtn radiusBtn" onClick="search();" type="button">검색</button>
 						</div>
 					</td>
 				</tr>
@@ -114,5 +115,6 @@
 			Copyright © <strong>danawa</strong> Co., Ltd. All Rights Reserved.
 		</address>
 	</footer>
+		<script type="text/javascript" async="true" src="js/linkProduct.js"></script>
 </body>
 </html>
