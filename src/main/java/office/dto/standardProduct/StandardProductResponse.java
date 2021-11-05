@@ -1,4 +1,4 @@
-package office.dto;
+package office.dto.standardProduct;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class StandardProductDTO {
+public class StandardProductResponse {
 	private String seq;
 	private Long categorySeq;
 	private String name;

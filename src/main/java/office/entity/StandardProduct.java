@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import office.dto.StandardProductDTO;
+import office.dto.standardProduct.StandardProductResponse;
 
 @Getter
 @Entity
@@ -64,8 +64,8 @@ public class StandardProduct {
 
 
 
-	public StandardProductDTO toDTO() {
-		return StandardProductDTO.builder()
+	public StandardProductResponse toDTO() {
+		return StandardProductResponse.builder()
 				.seq(seq)
 				.categorySeq(category.getSeq())
 				.name(name)

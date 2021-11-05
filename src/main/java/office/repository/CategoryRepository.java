@@ -13,4 +13,6 @@ public interface  CategoryRepository extends JpaRepository<Category, Long>{
 
 	@Override
 	List<Category> findAll();
+
+	Category findBySeq(Long seq);
 }

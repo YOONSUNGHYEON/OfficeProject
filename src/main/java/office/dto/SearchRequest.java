@@ -8,4 +8,5 @@ import lombok.Getter;
 public class SearchRequest {
 	int linkOption;
 	int categorySeq;
+	int page;
 }

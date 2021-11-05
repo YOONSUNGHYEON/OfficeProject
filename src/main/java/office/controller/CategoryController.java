@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import office.dto.CategoryDTO;
 import office.dto.ListResult;
-import office.dto.ResultResponse;
+import office.dto.category.CategoryListResponse;
+import office.dto.category.CategoryResponse;
 import office.service.CategoryService;
 
 @RestController
@@ -23,9 +23,9 @@ public class CategoryController {
 	 * @return
 	 */
 	@GetMapping(value="/categorys")
-	public ListResult<CategoryDTO> findCategoryList() {
-		List<CategoryDTO> categoryDTOList = categoryService.findAll();
-		ListResult<CategoryDTO> categoryListResponse =  new ListResult<>(categoryDTOList, new ResultResponse(200, "조회 성공"));
+	public ListResult<CategoryResponse> findCategoryList() {
+		List<CategoryResponse> categoryList = categoryService.findAll();
+		CategoryListResponse categoryListResponse = new CategoryListResponse(categoryList, 200, "조회 성공");
 		log.info("findCategoryList");
 		return categoryListResponse;
 	}
