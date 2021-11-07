@@ -21,5 +21,5 @@ public class StandardProductDTO {
 	private int lowestPrice;
 	private int mobileLowestPrice;
 	private int averagePrice;
-	private int cooperationComanyCount;
+	private int cooperationCompanyCount;
 }

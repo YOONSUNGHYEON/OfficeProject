@@ -51,7 +51,7 @@
 							<select class="shortInput" name="categorySelect" id="categorySelect">
 								<option value="none">카테고리</option>
 							</select>
-							<button class="btn whiteBtn radiusBtn" onClick="search();" type="button">검색</button>
+							<button class="btn whiteBtn radiusBtn" onClick="sort(6,2);" type="button">검색</button>
 						</div>
 					</td>
 				</tr>
@@ -68,14 +68,14 @@
 							<thead id="standardProductThead">
 								<tr>
 									<th>카테고리</th>
-									<th>상품 명</th>
+									<th><a onClick="sort(1, 1);" href="javascript:void(0);">상품 명</a></th>
 									<th>ⓘ</th>
 									<th>ⓤ</th>
-									<th>통합 최저가</th>
-									<th>PC 최저가</th>
-									<th>모바일 최저가</th>
+									<th><a onClick="sort(2, 1);" href="javascript:void(0);">통합 최저가</a></th>
+									<th><a onClick="sort(3, 1);" href="javascript:void(0);">PC 최저가</a></th>
+									<th><a onClick="sort(4, 1);" href="javascript:void(0);">모바일 최저가</a></th>
 									<th>평균가</th>
-									<th>업체</th>
+									<th><a onClick="sort(5, 1);" href="javascript:void(0);">업체</a></th>
 									<th></th>
 								</tr>
 							</thead>
