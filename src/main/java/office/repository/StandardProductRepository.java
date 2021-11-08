@@ -17,4 +17,6 @@ public interface StandardProductRepository extends PagingAndSortingRepository<St
 	@Override
 	List<StandardProduct> findAll();
 
+	StandardProduct findBySeq(String seq);
+
 }

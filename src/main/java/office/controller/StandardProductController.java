@@ -29,7 +29,7 @@ public class StandardProductController {
 	@GetMapping(value = "/standardProducts")
 	public StandardProductListResponse findUnLinkProductByCategory(SearchRequest searchRequest) {
 		Page<StandardProductResponse> standardProductDTOs = standardProductService.findUnLinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
-		StandardProductListResponse standardProductListResponse = new StandardProductListResponse(standardProductDTOs, 200, "조회 성공했습니다.");
+		StandardProductListResponse standardProductListResponse = new StandardProductListResponse(searchRequest.getSortOrder(), standardProductDTOs, 200, "조회 성공했습니다.");
 		log.info(" 링크 옵션 :  "+searchRequest.getLinkOption());
 		return standardProductListResponse;
 

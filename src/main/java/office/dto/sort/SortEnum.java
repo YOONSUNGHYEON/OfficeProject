@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum SortEnum {
-	SEQ(2,"이름으로 정렬"),
-	NAME(2,"이름으로 정렬"),
-	COMBINED_LOWEST_PRICE(3,"이름으로 정렬"),
-	LOWEST_PRICE(4,"이름으로 정렬"),
-	MOBILE_LOWEST_PRICE(5,"이름으로 정렬");
+	SEQ(6,"seq"),
+	NAME(1,"name"),
+	COMBINED_LOWEST_PRICE(2,"combinedLowestPrice"),
+	LOWEST_PRICE(3,"lowestPrice"),
+	MOBILE_LOWEST_PRICE(4,"mobileLowestPrice");
 
 	private final int code;
     private final String name;

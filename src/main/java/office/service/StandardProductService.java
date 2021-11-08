@@ -1,5 +1,7 @@
 package office.service;
 
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -51,12 +53,45 @@ public class StandardProductService {
 	 * @return List<StandardProductDTO>
 	 */
 	public Page<StandardProductResponse> findUnLinkProductByCategory(long categorySeq, String sortPriorityStr) {
-		Pageable firstPageWithTwoElements = PageRequest.of(0, 5, getSort(sortPriorityStr));
+		Pageable firstPageWithTwoElements = PageRequest.of(0, 20, getSort(sortPriorityStr));
 		Page<StandardProduct> allStandardProducts = standardProductRepository
 				.findAllByCategorySeqAndLowestPrice(categorySeq, 0, firstPageWithTwoElements);
 		Page<StandardProductResponse> standardProductPageResponse = allStandardProducts
 				.map(standardProduct -> standardProduct.toDTO());
 		return standardProductPageResponse;
+
+	}
+
+	public void update() {
+
+	}
+
+	public StandardProductResponse findBySeq(String standardProductSeq) {
+		StandardProduct standardProduct =  standardProductRepository.findBySeq(standardProductSeq);
+		return standardProduct.toDTO();
+	}
+
+	public void findLowestPrice(ArrayList<Integer> priceList, ArrayList<Integer> mobilePriceList,
+			StandardProductResponse standardProductResponse) {
+		int averagePrice = 0;
+		int minPrice = priceList.get(0);
+		int minMobilePrice = mobilePriceList.get(0);
+		StandardProduct standardProduct;
+		for(int i=1; i<priceList.size(); i++) {
+			averagePrice += priceList.get(i) + mobilePriceList.get(i);
+			if(minPrice > priceList.get(i)) {
+				minPrice = priceList.get(i);
+			}
+			if(minMobilePrice > mobilePriceList.get(i)) {
+				minMobilePrice = mobilePriceList.get(i);
+			}
+		}
+		if(standardProductResponse.getLowestPrice() == 0 || standardProductResponse.getLowestPrice()>minPrice) {
+			standardProduct = StandardProduct.builder().lowestPrice(minPrice).build();
+		}
+		if(standardProductResponse.getLowestPrice() == 0 || standardProductResponse.getLowestPrice()>minPrice) {
+			standardProduct = StandardProduct.builder().lowestPrice(minPrice).build();
+		}
 
 	}
 

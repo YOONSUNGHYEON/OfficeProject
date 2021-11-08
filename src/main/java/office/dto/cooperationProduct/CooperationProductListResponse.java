@@ -1,4 +1,4 @@
-package office.dto.standardProduct;
+package office.dto.cooperationProduct;
 
 import org.springframework.data.domain.Page;
 
@@ -8,9 +8,9 @@ import office.dto.PageResult;
 
 @Getter
 @Setter
-public class StandardProductListResponse extends PageResult {
+public class CooperationProductListResponse extends PageResult {
 	private String sortOrder;
-	public StandardProductListResponse(String sortOrder, Page<StandardProductResponse> pages, int code, String msg) {
+	public CooperationProductListResponse(String sortOrder, Page<CooperationProductResponse> pages, int code, String msg) {
 		super(pages, code, msg);
 		this.sortOrder = sortOrder;
 	}

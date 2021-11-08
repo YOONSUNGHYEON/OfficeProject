@@ -6,23 +6,30 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 
 import groovy.transform.builder.Builder;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import office.dto.cooperationProduct.CooperationProductResponse;
 
 @Getter
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @DynamicInsert
+@DynamicUpdate
+@IdClass(CooperationProductID.class)
 @Table(name = "tCooperationProductList")
 public class CooperationProduct implements Serializable{
 	@Id
@@ -59,5 +66,26 @@ public class CooperationProduct implements Serializable{
     @CreatedDate
 	@Column(name = "dtInputDate", nullable = false)
 	private LocalDateTime inputDate;
+
+    public CooperationProductResponse toDTO() {
+    	return CooperationProductResponse.builder()
+    			.cooperationCompanySeq(cooperationCompanySeq)
+    			.cooperationProductSeq(cooperationProductSeq)
+    			.category(category)
+    			.standardProduct(standardProduct)
+    			.name(name)
+    			.imageURL(imageURL)
+    			.URL(URL)
+    			.price(price)
+    			.mobilePrice(mobilePrice)
+    			.inputDate(inputDate)
+    			.build();
+    }
+
+    public CooperationProduct updateStandardProduct(StandardProduct standardProduct) {
+    	this.standardProduct = standardProduct;
+    	return this;
+    }
+
 
 }

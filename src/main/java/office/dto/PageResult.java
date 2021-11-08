@@ -2,14 +2,16 @@ package office.dto;
 
 import org.springframework.data.domain.Page;
 
+import lombok.Getter;
 
+@Getter
 public class PageResult<T> extends ResultResponse{
 
-	Page<T> pages;
+	Page<T> page;
 
-	public PageResult(Page<T> pages, int code, String msg) {
+	public PageResult(Page<T> page, int code, String msg) {
 		super(code, msg);
-		this.pages = pages;
+		this.page = page;
 	}
 
 

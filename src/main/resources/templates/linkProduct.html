@@ -26,15 +26,11 @@
 					<td colspan="2">
 						<label>
 							<input type="radio" name="link" value="0">
-							<span class="blueText" >
-							링크된상품
-							</span>
+							<span class="blueText"> 링크된상품 </span>
 						</label>
 						<label>
 							<input type="radio" name="link" value="1">
-							<span class="blueText" >
-							링크안된상품
-							</span>
+							<span class="blueText"> 링크안된상품 </span>
 						</label>
 						<label>
 							<input type='checkbox' name='linkedProduct' value='2'>
@@ -51,7 +47,7 @@
 							<select class="shortInput" name="categorySelect" id="categorySelect">
 								<option value="none">카테고리</option>
 							</select>
-							<button class="btn whiteBtn radiusBtn" onClick="sort(6,2);" type="button">검색</button>
+							<button class="btn whiteBtn radiusBtn" onClick="searchProduct();" type="button">검색</button>
 						</div>
 					</td>
 				</tr>
@@ -64,18 +60,18 @@
 					<button class="btn" onclick="download(1);" type="button">엑셀 다운로드</button>
 
 					<div style="overflow: auto; height: 650px;">
-						<table  border="1" id="standardProductTable">
+						<table border="1" id="standardProductTable">
 							<thead id="standardProductThead">
 								<tr>
 									<th>카테고리</th>
-									<th><a onClick="sort(1, 1);" href="javascript:void(0);">상품 명</a></th>
+									<th>상품 명</th>
 									<th>ⓘ</th>
 									<th>ⓤ</th>
-									<th><a onClick="sort(2, 1);" href="javascript:void(0);">통합 최저가</a></th>
-									<th><a onClick="sort(3, 1);" href="javascript:void(0);">PC 최저가</a></th>
-									<th><a onClick="sort(4, 1);" href="javascript:void(0);">모바일 최저가</a></th>
+									<th>통합 최저가</th>
+									<th>PC 최저가</th>
+									<th>모바일 최저가</th>
 									<th>평균가</th>
-									<th><a onClick="sort(5, 1);" href="javascript:void(0);">업체</a></th>
+									<th>업체</th>
 									<th></th>
 								</tr>
 							</thead>
@@ -108,13 +104,13 @@
 					<div class="pagination" id="cooperationPagination"></div>
 				</div>
 			</div>
+			<div id='linkBtnGroup'>
+				<button class="btn linkBtn" onclick="link()" type="button">링크 생성</button>
+				<button class="btn linkBtn" onclick="unLink()" type="button">링크 해제</button>
+			</div>
 		</form>
+
 	</div>
-	<footer>
-		<address>
-			Copyright © <strong>danawa</strong> Co., Ltd. All Rights Reserved.
-		</address>
-	</footer>
-		<script type="text/javascript" async="true" src="js/linkProduct.js"></script>
+	<script type="text/javascript" async="true" src="js/linkProduct.js"></script>
 </body>
 </html>

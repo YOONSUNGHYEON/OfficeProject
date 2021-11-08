@@ -22,10 +22,10 @@ public class CategoryService {
 	 */
 	public List<CategoryResponse> findAll() {
 		List<Category> categoryList = categoryRepository.findAll();
-		List<CategoryResponse> categoryResponse = new ArrayList<>();
+		List<CategoryResponse> categoryResponses = new ArrayList<>();
 		for (Category category : categoryList) {
-			categoryDTOList.add(new CategoryResponse(category.getSeq(), category.getName()));
+			categoryResponses.add(new CategoryResponse(category.getSeq(), category.getName()));
 		}
-		return categoryDTOList;
+		return categoryResponses;
 	}
 }

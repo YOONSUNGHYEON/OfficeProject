@@ -1,9 +1,22 @@
 package office.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
 
-import office.entity.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface CooperationProductRepository extends JpaRepository<Category, Long>{
+import office.entity.CooperationProduct;
+import office.entity.CooperationProductID;
+
+public interface CooperationProductRepository extends PagingAndSortingRepository<CooperationProduct, CooperationProductID>{
+
+
+	Page<CooperationProduct> findAllByCategorySeqAndStandardProductSeq(long categorySeq, String standardProductSeq, Pageable pageable);
+
+	void save(Optional<CooperationProduct> cooperationProduct);
+
+	CooperationProduct findByCooperationProductSeqAndCooperationCompanySeq(String cooperationProductSeq, String cooperationCompanySeq);
+
 
 }

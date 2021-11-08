@@ -31,35 +31,84 @@ function makeSelect(dataList) {
 	});
 	return dataSelect;
 }
+
 let sortOrder = "";
 
-function searchStandardProducts() {
+function searchProduct(sortSeq, orderSeq) {
+	getStandardProducts(6, 2);
+	getCooperationProducts(6, 2);
+}
+
+function link() {
+	let standardProductSeq = document.querySelector('input[name="standardProduct"]:checked').value;
+	let cooperationProductSeqArr = getCheckboxValue("cooperationProductSeq");
+	let cooperationCompanySeqArr = getCheckboxValue("cooperationCompanySeq");
+	$.ajax({
+		url: "/cooperationProducts/link",
+		type: "POST",
+		data: JSON.stringify({
+			"standardProductSeq": standardProductSeq,
+			"cooperationProductSeqArr": cooperationProductSeqArr,
+			"cooperationCompanySeqArr":cooperationCompanySeqArr
+		}),
+		contentType: 'application/json',
+		dataType: "json",
+		success: function(response) {
+			location.reload(true);
+		}
+	})
+}
+
+function unLink() {
+	console.log("unLink");
+}
+function getCheckboxValue(name) {
+	// 선택된 목록 가져오기
+	let arr = [];
+	const query = 'input[name="' + name + '"]';
+	const selectedEls = document.querySelectorAll(query);
+	// 선택된 목록에서 value 찾기
+	let result = '';
+	selectedEls.forEach((el) => {
+		arr.push(el.value);
+	});
+
+	// 출력
+	console.log(arr);
+	return arr;
+}
+function getStandardProducts(sortSeq, orderSeq) {
 	let categorySeq = document.getElementById('categorySelect').value;
-	let linkRadio = document.querySelector('input[name="link"]:checked').value;
+	let linkOption = document.querySelector('input[name="link"]:checked').value;
 	let page = 1;
+	if (sortSeq + ':' + orderSeq == "6:2" || sortOrder == "6:2") {
+		sortOrder = sortSeq + ":" + orderSeq;
+	} else {
+		sortOrder = makesortOrderQuery(sortOrder, sortSeq, orderSeq);
+	}
 	$.ajax({
 		type: 'GET',
-		url: '/standardProducts?page=' + page + '&categorySeq=' + categorySeq + '&linkOption=' + linkRadio,
+		url: '/standardProducts?&page=' + page + '&linkOption=' + linkOption + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder,
 		dataType: "json",
 		success: function(standardProductListResponse) {
-			console.log(standardProductListResponse);
+
 			let standardProductThead = "";
 			standardProductThead += '<th>카테고리</th>';
-			standardProductThead += '<th>상품 명</th>';
+			standardProductThead += '<th><a onClick="sort(1, 1);" href="javascript:void(0);">상품 명</a></th>';
 			standardProductThead += '<th>ⓘ</th>';
 			standardProductThead += '<th>ⓤ</th>';
-			standardProductThead += '<th>통합 최저가</th>';
-			standardProductThead += '<th>PC 최저가</th>';
-			standardProductThead += '<th>모바일 최저가</th>';
+			standardProductThead += '<th><a onClick="sort(1, 1);" href="javascript:void(0);">통합 최저가</a></th>';
+			standardProductThead += '<th><a onClick="sort(1, 1);" href="javascript:void(0);">PC 최저가</a></th>';
+			standardProductThead += '<th><a onClick="sort(1, 1);" href="javascript:void(0);">모바일 최저가</a></th>';
 			standardProductThead += '<th>평균가</th>';
-			standardProductThead += '<th>업체</th>';
+			standardProductThead += '<th><a onClick="sort(1, 1);" href="javascript:void(0);">업체</a></th>';
 			standardProductThead += '<th>   </th>';
 
 			$("#standardProductThead").html(standardProductThead);
 
 			let standardProductTable = "";
-			let standardProductList = standardProductListResponse['list']['content'];
-
+			let standardProductList = standardProductListResponse['page']['content'];
+			console.log(standardProductList);
 			$.each(standardProductList, function(index, standardProduct) {
 				standardProductTable += '<tr style="cursor:pointer;">';
 				standardProductTable += '<td>' + standardProduct['categorySeq'] + '</td>';
@@ -75,69 +124,106 @@ function searchStandardProducts() {
 				cooperationProductTable += '</tr>';
 			});
 			$("#standardProductTbody").html(standardProductTable);
-			let paginationResponse = standardProductListResponse['list'];
-			let pagination = "";
-			//let preArrow = Number(tableData['aPageData']['nCurrentPage']) - Number(tableData['aPageData']['nBlockPage']);
-			//let nextArrow = Number(tableData['aPageData']['nCurrentPage']) + Number(tableData['aPageData']['nBlockPage']);
-			pagination += '<a class="arrow" onClick="" href="#a"><<</a>';
-			pagination += '<a class="arrow" onClick="" href="javascript:void(0);">&lt;</a>';
-			for (let i = 1; i <=paginationResponse['totalPages']; i++) {
-				if (paginationResponse['pageNumber']+1 == i) {
-					pagination += '<a class="active" onClick=""  href="javascript:void(0);">' + i + '</a>';
-				} else {
-					pagination += '<a onClick=""  href="javascript:void(0);">' + i + '</a>';
-				}
-			}
+			let pagination = makePagination(standardProductListResponse['page']);
 			$("#standardPagination").html(pagination);
+
 		}
 	});
 }
 
-
-
-function sort(sortSeq, orderSeq) {
+function getCooperationProducts(sortSeq, orderSeq) {
 	let categorySeq = document.getElementById('categorySelect').value;
 	let linkOption = document.querySelector('input[name="link"]:checked').value;
-
-	if (sortSeq+':'+orderSeq == "6:2" || sortOrder == "6:2") {
+	let page = 1;
+	if (sortSeq + ':' + orderSeq == "6:2" || sortOrder == "6:2") {
 		sortOrder = sortSeq + ":" + orderSeq;
 	} else {
-		sortOrder = makesortOrderQuery(sortOrder, sortSeq , orderSeq);
+		sortOrder = makesortOrderQuery(sortOrder, sortSeq, orderSeq);
 	}
-	console.log('/standardProducts?linkOption=' + linkOption + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder);
 	$.ajax({
 		type: 'GET',
-		url: '/standardProducts?linkOption=' + linkOption + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder,
+		url: '/cooperationProducts/unlink?&page=' + page + '&linkOption=' + linkOption + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder,
 		dataType: "json",
 		success: function(response) {
-			sortOrder = response['sortOption'];
-			
+			console.log(response);
+			let cooperationProductThead = "";
+			cooperationProductThead += '<th>협력사</th>';
+			cooperationProductThead += '<th>카테고리</th>';
+			cooperationProductThead += '<th><a onClick="findCooperationProductList(1, 1 ,1)" href="#a">상품명</a></th>';
+			cooperationProductThead += '<td>ⓘ</td>';
+			cooperationProductThead += '<td>ⓤ</td>';
+			cooperationProductThead += '<th>PC가격</th>';
+			cooperationProductThead += '<th>모바일 가격</th>';
+			cooperationProductThead += '<th><a onClick="findCooperationProductList(1, 2 ,1)" href="#a">최초 등록</a></th>';
+
+
+
+			let cooperationProductTable = "";
+			$.each(response['page']['content'], function(index, cooperationProduct) {
+				cooperationProductTable += '<tr style="cursor:pointer;">';
+				cooperationProductTable += '<td><input type="checkbox" name="cooperationProductSeq" value="' + cooperationProduct['cooperationProductSeq'] + '"></td>';
+				cooperationProductTable += '<td> <input type="hidden" id="cooperationCompanySeq" name="cooperationCompanySeq" value="' + cooperationProduct["cooperationCompanySeq"] + '">' + cooperationProduct["cooperationCompanySeq"] + '</td>';
+				cooperationProductTable += '<td>' + cooperationProduct['category']['name'] + '</td>';
+				cooperationProductTable += '<td>' + cooperationProduct['name'] + '</td>';
+				cooperationProductTable += '<td><a target="_blank" href="' + cooperationProduct['name'] + '">ⓘ</td>'
+				cooperationProductTable += '<td><a target="_blank" href="' + cooperationProduct['name'] + '">ⓤ</a></td>';
+				cooperationProductTable += '<td>' + cooperationProduct['price'] + '</td>';
+				cooperationProductTable += '<td>' + cooperationProduct['mobilePrice'] + '</td>';
+				cooperationProductTable += '<td>' + cooperationProduct['inputDate'] + '</td>';
+				cooperationProductTable += '</tr>';
+			});
+
+			$("#cooperationProductTbody").html(cooperationProductTable);
+			let paginationResponse = response['page'];
+			let pagination = makePagination(paginationResponse);
+			$("#cooperationPagination").html(pagination);
 		}
-	});
+
+	})
+
 }
 
-function makesortOrderQuery(priorityQuery, sortSeq , orderSeq) {
+function makePagination(paginationResponse) {
+	let pagination = "";
+	//let preArrow = Number(tableData['aPageData']['nCurrentPage']) - Number(tableData['aPageData']['nBlockPage']);
+	//let nextArrow = Number(tableData['aPageData']['nCurrentPage']) + Number(tableData['aPageData']['nBlockPage']);
+	pagination += '<a class="arrow" onClick="" href="#a"><<</a>';
+	pagination += '<a class="arrow" onClick="" href="javascript:void(0);">&lt;</a>';
+	for (let i = 1; i <= paginationResponse['totalPages']; i++) {
+		if (paginationResponse['pageNumber'] + 1 == i) {
+			pagination += '<a class="active" onClick=""  href="javascript:void(0);">' + i + '</a>';
+		} else {
+			pagination += '<a onClick=""  href="javascript:void(0);">' + i + '</a>';
+		}
+	}
+	pagination += '<a class="arrow" onClick="" href="#a">></a>';
+	pagination += '<a class="arrow" onClick="" href="javascript:void(0);">>></a>';
+	return pagination;
+}
+
+function makesortOrderQuery(priorityQuery, sortSeq, orderSeq) {
 	const priorityList = priorityQuery.split(",");
 	let newPriorityQuery = "";
 	let ok = false;
-	for(let i=0; i < priorityList.length; i++){
+
+	for (let i = 0; i < priorityList.length; i++) {
 		const sortOption = priorityList[i].split(":");
-		if(sortOption[0]==sortSeq) {
-			ok=true;
-			if(sortOption[1]==1){
+		if (sortOption[0] == sortSeq) {
+			ok = true;
+			if (sortOption[1] == 1) {
 				newPriorityQuery += sortSeq + ':' + 2;
 			} else {
 				newPriorityQuery += sortSeq + ':' + 1;
 			}
-		}else {
-			newPriorityQuery+=priorityList[i];
+		} else {
+			newPriorityQuery += priorityList[i];
 		}
-		newPriorityQuery+=',';
+		newPriorityQuery += ',';
 	}
-	if(ok == false) {
-		newPriorityQuery+=sortSeq + ':' + orderSeq;
+	if (ok == false) {
+		newPriorityQuery += sortSeq + ':' + orderSeq;
 	} else {
-		newPriorityQuery = newPriorityQuery.substring(0,newPriorityQuery.length-1);
+		newPriorityQuery = newPriorityQuery.substring(0, newPriorityQuery.length - 1);
 	}
 	return newPriorityQuery;
 }
