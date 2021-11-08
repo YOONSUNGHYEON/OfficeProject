@@ -72,11 +72,27 @@ public class StandardProduct {
 				.categorySeq(category.getSeq())
 				.name(name)
 				.imageURL(imageURL)
+				.imageSource(imageSource)
 				.lowestPrice(lowestPrice)
 				.mobileLowestPrice(mobileLowestPrice)
 				.averagePrice(averagePrice)
 				.cooperationCompanyCount(cooperationCompanyCount)
 				.build();
+	}
+
+	public StandardProduct updatePrice(int lowestPrice, int mobileLowestPrice, int averagePrice) {
+		this.lowestPrice = lowestPrice;
+		this.mobileLowestPrice = mobileLowestPrice;
+		this.averagePrice = averagePrice;
+		return this;
+	}
+
+	public StandardProduct updatePrice(StandardProduct standardProduct) {
+		this.lowestPrice = standardProduct.getLowestPrice();
+		this.mobileLowestPrice = standardProduct.getMobileLowestPrice();
+		this.cooperationCompanyCount = standardProduct.getCooperationCompanyCount();
+		return this;
+
 	}
 
 }

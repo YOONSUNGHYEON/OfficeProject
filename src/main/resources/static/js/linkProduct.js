@@ -86,22 +86,29 @@ function getStandardProducts(sortSeq, orderSeq) {
 	} else {
 		sortOrder = makesortOrderQuery(sortOrder, sortSeq, orderSeq);
 	}
+	let url='';
+	if(linkOption==1){
+		url = '/standardProducts?&page=' + page + '&linkOption=' + linkOption + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder;
+	} else {
+		url = '/standardProducts/link?&page=' + page + '&linkOption=' + linkOption + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder;
+	}
+	
 	$.ajax({
 		type: 'GET',
-		url: '/standardProducts?&page=' + page + '&linkOption=' + linkOption + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder,
+		url: url,
 		dataType: "json",
 		success: function(standardProductListResponse) {
-
+			console.log(standardProductListResponse);
 			let standardProductThead = "";
 			standardProductThead += '<th>카테고리</th>';
-			standardProductThead += '<th><a onClick="sort(1, 1);" href="javascript:void(0);">상품 명</a></th>';
+			standardProductThead += '<th><a onClick="getStandardProducts(1, 1);" href="javascript:void(0);">상품 명</a></th>';
 			standardProductThead += '<th>ⓘ</th>';
 			standardProductThead += '<th>ⓤ</th>';
-			standardProductThead += '<th><a onClick="sort(1, 1);" href="javascript:void(0);">통합 최저가</a></th>';
-			standardProductThead += '<th><a onClick="sort(1, 1);" href="javascript:void(0);">PC 최저가</a></th>';
-			standardProductThead += '<th><a onClick="sort(1, 1);" href="javascript:void(0);">모바일 최저가</a></th>';
+			standardProductThead += '<th><a onClick="getStandardProducts(2, 1);" href="javascript:void(0);">통합 최저가</a></th>';
+			standardProductThead += '<th><a onClick="getStandardProducts(3, 1);" href="javascript:void(0);">PC 최저가</a></th>';
+			standardProductThead += '<th><a onClick="getStandardProducts(4, 1);" href="javascript:void(0);">모바일 최저가</a></th>';
 			standardProductThead += '<th>평균가</th>';
-			standardProductThead += '<th><a onClick="sort(1, 1);" href="javascript:void(0);">업체</a></th>';
+			standardProductThead += '<th><a onClick="getStandardProducts(5, 1);" href="javascript:void(0);">업체</a></th>';
 			standardProductThead += '<th>   </th>';
 
 			$("#standardProductThead").html(standardProductThead);

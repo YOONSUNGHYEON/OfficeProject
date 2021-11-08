@@ -1,7 +1,5 @@
 package office.service;
 
-import java.util.ArrayList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,9 +9,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import office.dto.cooperationProduct.CooperationProductResponse;
 import office.dto.sort.SortEnum;
 import office.dto.standardProduct.StandardProductResponse;
 import office.entity.StandardProduct;
+import office.repository.CategoryRepository;
+import office.repository.CooperationProductRepository;
 import office.repository.StandardProductRepository;
 
 @Service
@@ -23,6 +24,8 @@ public class StandardProductService {
 	private static final Logger log = LoggerFactory.getLogger(StandardProductService.class);
 
 	private final StandardProductRepository standardProductRepository;
+	private final CooperationProductRepository cooperationProductRepository;
+	private final CategoryRepository categoryRepository;
 
 	/**
 	 * @param sortPriorityStr
@@ -45,6 +48,7 @@ public class StandardProductService {
 				sort = sort.descending();
 			}
 		}
+		log.info(sort.toString());
 		return sort;
 	}
 
@@ -62,36 +66,38 @@ public class StandardProductService {
 
 	}
 
-	public void update() {
+	public Page<StandardProductResponse> findLinkProductByCategory(long categorySeq, String sortPriorityStr) {
+		Pageable firstPageWithTwoElements = PageRequest.of(0, 20, getSort(sortPriorityStr));
+		Page<StandardProduct> allStandardProducts = standardProductRepository
+				.findAllByCategorySeqAndCooperationCompanyCountGreaterThan(categorySeq, 0, firstPageWithTwoElements);
+		Page<StandardProductResponse> standardProductPageResponse = allStandardProducts
+				.map(standardProduct -> standardProduct.toDTO());
+		return standardProductPageResponse;
 
 	}
 
 	public StandardProductResponse findBySeq(String standardProductSeq) {
-		StandardProduct standardProduct =  standardProductRepository.findBySeq(standardProductSeq);
+		StandardProduct standardProduct = standardProductRepository.findBySeq(standardProductSeq);
 		return standardProduct.toDTO();
 	}
 
-	public void findLowestPrice(ArrayList<Integer> priceList, ArrayList<Integer> mobilePriceList,
-			StandardProductResponse standardProductResponse) {
-		int averagePrice = 0;
-		int minPrice = priceList.get(0);
-		int minMobilePrice = mobilePriceList.get(0);
-		StandardProduct standardProduct;
-		for(int i=1; i<priceList.size(); i++) {
-			averagePrice += priceList.get(i) + mobilePriceList.get(i);
-			if(minPrice > priceList.get(i)) {
-				minPrice = priceList.get(i);
-			}
-			if(minMobilePrice > mobilePriceList.get(i)) {
-				minMobilePrice = mobilePriceList.get(i);
-			}
+	public void findLowestPrice(String standardProductSeq, CooperationProductResponse cooperationProductResponse) {
+		StandardProduct standardProduct = standardProductRepository.findBySeq(standardProductSeq);
+		StandardProduct newStandardProduct = null;
+		int minPrice = standardProduct.getLowestPrice();
+		int minMobilePrice = standardProduct.getMobileLowestPrice();
+		if (standardProduct.getCooperationCompanyCount() == 0) {
+			minPrice = cooperationProductResponse.getPrice();
+			minMobilePrice = cooperationProductResponse.getMobilePrice();
+		} else if (minPrice > cooperationProductResponse.getPrice()) {
+			minPrice = cooperationProductResponse.getPrice();
+		} else if (minMobilePrice > cooperationProductResponse.getMobilePrice()) {
+			minMobilePrice = cooperationProductResponse.getMobilePrice();
 		}
-		if(standardProductResponse.getLowestPrice() == 0 || standardProductResponse.getLowestPrice()>minPrice) {
-			standardProduct = StandardProduct.builder().lowestPrice(minPrice).build();
-		}
-		if(standardProductResponse.getLowestPrice() == 0 || standardProductResponse.getLowestPrice()>minPrice) {
-			standardProduct = StandardProduct.builder().lowestPrice(minPrice).build();
-		}
+		newStandardProduct = standardProduct.updatePrice(
+				StandardProduct.builder().cooperationCompanyCount(standardProduct.getCooperationCompanyCount() + 1)
+						.lowestPrice(minPrice).mobileLowestPrice(minMobilePrice).build());
+		standardProductRepository.save(newStandardProduct);
 
 	}
 

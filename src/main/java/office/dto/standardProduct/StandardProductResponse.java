@@ -17,10 +17,12 @@ public class StandardProductResponse {
 	private Long categorySeq;
 	private String name;
 	private String imageURL;
+	private String imageSource;
 	private String manufactureDate;
 	private int lowestPrice;
 	private int mobileLowestPrice;
 	private int averagePrice;
 	private int cooperationCompanyCount;
+
 
 }

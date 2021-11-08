@@ -34,4 +34,13 @@ public class StandardProductController {
 		return standardProductListResponse;
 
 	}
+
+	@GetMapping(value = "/standardProducts/link")
+	public StandardProductListResponse findLinkProductByCategory(SearchRequest searchRequest) {
+		Page<StandardProductResponse> standardProductDTOs = standardProductService.findLinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
+		StandardProductListResponse standardProductListResponse = new StandardProductListResponse(searchRequest.getSortOrder(), standardProductDTOs, 200, "조회 성공했습니다.");
+		log.info(" 링크 옵션 :  "+searchRequest.getLinkOption());
+		return standardProductListResponse;
+
+	}
 }

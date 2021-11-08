@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import office.dto.cooperationProduct.CooperationProductResponse;
 import office.dto.sort.SortEnum;
-import office.dto.standardProduct.StandardProductResponse;
 import office.entity.CooperationProduct;
 import office.entity.StandardProduct;
 import office.repository.CooperationProductRepository;
@@ -51,11 +50,11 @@ public class CooperationProductService {
 
 	}
 
-	public CooperationProductResponse link(StandardProductResponse standardProductResponse, String cooperationProductSeq, String cooperationCompanySeq) {
+	public CooperationProductResponse link(String standardProductSeq, String cooperationProductSeq, String cooperationCompanySeq) {
 		CooperationProduct cooperationProduct = cooperationProductRepository
 				.findByCooperationProductSeqAndCooperationCompanySeq(cooperationProductSeq, cooperationCompanySeq);
 		StandardProduct standardProduct = StandardProduct.builder()
-									.seq(standardProductResponse.getSeq())
+									.seq(standardProductSeq)
 									.build();
 		CooperationProductResponse cooperationProductResponse =  cooperationProductRepository.save(cooperationProduct.updateStandardProduct(standardProduct)).toDTO();
 		return cooperationProductResponse;

@@ -14,9 +14,14 @@ public interface StandardProductRepository extends PagingAndSortingRepository<St
 
 	Page<StandardProduct> findAllByCategorySeqAndLowestPrice(long categorySeq, int lowerPrice, Pageable pageable);
 
+	Page<StandardProduct> findAllByCategorySeqAndCooperationCompanyCountGreaterThan(long categorySeq, int cooperationCompanyCount, Pageable pageable);
+
 	@Override
 	List<StandardProduct> findAll();
 
 	StandardProduct findBySeq(String seq);
+
+	@Override
+	StandardProduct save(StandardProduct standardProduct);
 
 }

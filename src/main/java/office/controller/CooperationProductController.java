@@ -1,7 +1,5 @@
 package office.controller;
 
-import java.util.ArrayList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,7 +13,6 @@ import office.dto.SearchRequest;
 import office.dto.cooperationProduct.CooperationProductListLinkReqeust;
 import office.dto.cooperationProduct.CooperationProductListResponse;
 import office.dto.cooperationProduct.CooperationProductResponse;
-import office.dto.standardProduct.StandardProductResponse;
 import office.service.CooperationProductService;
 import office.service.StandardProductService;
 
@@ -43,15 +40,11 @@ public class CooperationProductController {
 	public String link(@RequestBody CooperationProductListLinkReqeust linkReqeust) {
 		String[] cooperationProductSeqArr = linkReqeust.getCooperationProductSeqArr();
 		String[] cooperationCompanySeqArr = linkReqeust.getCooperationCompanySeqArr();
-		ArrayList<Integer> priceList = new ArrayList<>();
-		ArrayList<Integer> mobilePriceList = new ArrayList<>();
-		StandardProductResponse standardProductResponse =  standardProductService.findBySeq(linkReqeust.getStandardProductSeq());
 		for(int i=0; i<cooperationProductSeqArr.length; i++) {
-			CooperationProductResponse cooperationProductResponse = cooperationProductService.link(standardProductResponse, cooperationProductSeqArr[i], cooperationCompanySeqArr[i]);
-			priceList.add(cooperationProductResponse.getPrice());
-			mobilePriceList.add(cooperationProductResponse.getMobilePrice());
+			CooperationProductResponse cooperationProductResponse = cooperationProductService.link(linkReqeust.getStandardProductSeq(), cooperationProductSeqArr[i], cooperationCompanySeqArr[i]);;
+			standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq(), cooperationProductResponse);
 		}
-		standardProductService.findLowestPrice(priceList, mobilePriceList, standardProductResponse);
+
 		return "/createCooperationProduct";
 	}
 }
