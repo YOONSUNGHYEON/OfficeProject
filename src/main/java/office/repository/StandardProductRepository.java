@@ -8,11 +8,12 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import office.entity.StandardProduct;
 
-public interface StandardProductRepository extends PagingAndSortingRepository<StandardProduct, String>{
+public interface StandardProductRepository extends PagingAndSortingRepository<StandardProduct, String> {
 
 	List<StandardProduct> findByCategorySeq(long categorySeq);
 
 	Page<StandardProduct> findAllByCategorySeqAndLowestPrice(long categorySeq, int lowerPrice, Pageable pageable);
+
 	@Override
 	List<StandardProduct> findAll();
 

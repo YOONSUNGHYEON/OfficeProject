@@ -31,6 +31,7 @@ function makeSelect(dataList) {
 	});
 	return dataSelect;
 }
+let sortOrder = "";
 
 function searchStandardProducts() {
 	let categorySeq = document.getElementById('categorySelect').value;
@@ -92,8 +93,51 @@ function searchStandardProducts() {
 	});
 }
 
-function search() {
-	searchStandardProducts();
 
+
+function sort(sortSeq, orderSeq) {
+	let categorySeq = document.getElementById('categorySelect').value;
+	let linkOption = document.querySelector('input[name="link"]:checked').value;
+
+	if (sortSeq+':'+orderSeq == "6:2" || sortOrder == "6:2") {
+		sortOrder = sortSeq + ":" + orderSeq;
+	} else {
+		sortOrder = makesortOrderQuery(sortOrder, sortSeq , orderSeq);
+	}
+	console.log('/standardProducts?linkOption=' + linkOption + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder);
+	$.ajax({
+		type: 'GET',
+		url: '/standardProducts?linkOption=' + linkOption + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder,
+		dataType: "json",
+		success: function(response) {
+			sortOrder = response['sortOption'];
+			
+		}
+	});
 }
 
+function makesortOrderQuery(priorityQuery, sortSeq , orderSeq) {
+	const priorityList = priorityQuery.split(",");
+	let newPriorityQuery = "";
+	let ok = false;
+	for(let i=0; i < priorityList.length; i++){
+		const sortOption = priorityList[i].split(":");
+		if(sortOption[0]==sortSeq) {
+			ok=true;
+			if(sortOption[1]==1){
+				newPriorityQuery += sortSeq + ':' + 2;
+			} else {
+				newPriorityQuery += sortSeq + ':' + 1;
+			}
+		}else {
+			newPriorityQuery+=priorityList[i];
+		}
+		newPriorityQuery+=',';
+	}
+	if(ok == false) {
+		newPriorityQuery+=sortSeq + ':' + orderSeq;
+	} else {
+		newPriorityQuery = newPriorityQuery.substring(0,newPriorityQuery.length-1);
+	}
+	return newPriorityQuery;
+}

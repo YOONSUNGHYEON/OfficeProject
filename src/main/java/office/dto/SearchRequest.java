@@ -9,4 +9,5 @@ public class SearchRequest {
 	int linkOption;
 	int categorySeq;
 	int page;
+	String sortOrder;
 }

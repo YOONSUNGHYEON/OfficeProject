@@ -59,8 +59,8 @@ public class StandardProduct {
 	@Column(name = "nAveragePrice")
 	private int averagePrice;
 
-	@Column(name = "nCooperationCompayCount")
-	private int cooperationCompayCount;
+	@Column(name = "nCooperationCompanyCount")
+	private int cooperationCompanyCount;
 
 
 
@@ -73,7 +73,7 @@ public class StandardProduct {
 				.lowestPrice(lowestPrice)
 				.mobileLowestPrice(mobileLowestPrice)
 				.averagePrice(averagePrice)
-				.cooperationComanyCount(cooperationCompayCount)
+				.cooperationCompanyCount(cooperationCompanyCount)
 				.build();
 	}
 
