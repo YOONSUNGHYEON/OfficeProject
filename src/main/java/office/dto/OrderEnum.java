@@ -1,4 +1,4 @@
-package office.dto.sort;
+package office.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OrderEnum {
-	DESC(1, "desc"),
-	ASC(2, "asc");
+	DESC(1, "내림차순"),
+	ASC(2, "오름차순");
 	private int code;
     private final String name;
 }

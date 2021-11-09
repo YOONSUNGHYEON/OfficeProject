@@ -1,20 +1,20 @@
 window.onload = function() {
-	findCategoryList();
+	findCategorys();
 }
 
 /*카테고리 목록 가져오기*/
-function findCategoryList() {
+function findCategorys() {
 	$.ajax({
 		type: 'GET',
 		url: '/categorys',
 		dataType: "json",
-		success: function(categoryListResponse) {
-			if (categoryListResponse['code'] == '200') {
-				categorySelect = makeSelect(categoryListResponse['list']);
+		success: function(categorysResponse) {
+			if (categorysResponse['code'] == '200') {
+				categorySelect = makeSelect(categorysResponse['list']);
 				document.getElementById('categorySelect').innerHTML += categorySelect;
-			} else if (cooperationCompanyListResponse['code'] == '400') {
+			} else if (cooperationCompanysResponse['code'] == '400') {
 				alert("");
-			} else if (cooperationCompanyListResponse['code'] == '500') {
+			} else if (cooperationCompanysResponse['code'] == '500') {
 				alert("서버 상에 문제가 있어 카테고리를 불러오는데 실패 했습니다.");
 			}
 		}
@@ -22,9 +22,9 @@ function findCategoryList() {
 }
 
 /* option 만들기 */
-function makeSelect(dataList) {
+function makeSelect(optionDatas) {
 	let dataSelect = '';
-	$.each(dataList, function(index, data) {
+	$.each(optionDatas, function(index, data) {
 		dataSelect += '<option value="';
 		dataSelect += data['seq'] + '">';
 		dataSelect += data['name'] + '</option>';
@@ -49,7 +49,12 @@ function link() {
 		contentType: 'application/json',
 		dataType: "json",
 		success: function(response) {
-			location.reload(true);
+			if(response['code']==200){
+				alert("링크를 생성했습니다.");
+				getStandardProducts(6, 3, 1);
+				getCooperationProducts(6, 3);
+			}
+			
 		}
 	})
 }
@@ -67,7 +72,13 @@ function unLink() {
 		contentType: 'application/json',
 		dataType: "json",
 		success: function(response) {
-			location.reload(true);
+			if(response['code']==200){
+				alert("링크를 해제했습니다.");
+				getStandardProducts(6, 3, 1);
+				getCooperationProducts(6, 3);
+				
+			}
+			
 		}
 
 
@@ -114,50 +125,80 @@ function getStandardProducts(sortSeq, orderSeq, page) {
 	ajaxStandardProducts(url);
 }
 
+/* 기준 상품 Table > Thead 에 들어갈 html 만들기 */
+function makeStandardProductThead(currentPage, sortOrderArr) {
+	let standardProductThead = "";
+	standardProductThead += '<th>카테고리</th>';
+	standardProductThead += '<th><a id="option1" onClick="getStandardProducts(1, 1, ' + currentPage + ');" href="javascript:void(0);">상품 명</a></th>';
+	standardProductThead += '<th>ⓘ</th>';
+	standardProductThead += '<th>ⓤ</th>';
+	standardProductThead += '<th><a id="option2" onClick="getStandardProducts(2, 1, ' + currentPage + ');" href="javascript:void(0);">통합 최저가</a></th>';
+	standardProductThead += '<th><a id="option3" onClick="getStandardProducts(3, 1, ' + currentPage + ');" href="javascript:void(0);">PC 최저가</a></th>';
+	standardProductThead += '<th><a id="option4" onClick="getStandardProducts(4, 1, ' + currentPage + ');" href="javascript:void(0);">모바일 최저가</a></th>';
+	standardProductThead += '<th>평균가</th>';
+	standardProductThead += '<th><a id="option5" onClick="getStandardProducts(5, 1, ' + currentPage + ');" href="javascript:void(0);">업체</a></th>';
+	standardProductThead += '<th>   </th>';
 
+	$("#standardProductThead").html(standardProductThead);
+
+	for (let i = 1; i < 6; i++) {
+		if (sortOrderArr[i] != null) {
+			let IDName = 'option' + i;
+			document.getElementById(IDName).className = 'activeThead';
+			if (sortOrderArr[i] == 1) {
+				$('#standardProductThead #' + IDName).append('↓');
+			} else {
+				$('#standardProductThead #' + IDName).append('↑');
+			}
+		}
+	}
+}
+
+/* 기준 상품 Table > Tbody 에 들어갈 html 만들기 */
+function makeStandardProductTbody(standardProducts) {
+	let standardProductTable = "";
+	$.each(standardProducts, function(index, standardProduct) {
+		standardProductTable += '<tr style="cursor:pointer;" onclick="clickStandardProduct(\'' + standardProduct['seq'] + '\');" >';
+		standardProductTable += '<td>' + standardProduct['categorySeq'] + '</td>';
+		standardProductTable += '<td onclick="event.cancelBubble=true">' + standardProduct['name'] + '</td>';
+		standardProductTable += '<td onclick="event.cancelBubble=true">ⓘ</td>';
+		standardProductTable += '<td onclick="event.cancelBubble=true">ⓤ</td>';
+		standardProductTable += '<td>' + standardProduct['combinedLowestPrice'] + '</td>';
+		standardProductTable += '<td>' + standardProduct['lowestPrice'] + '</td>';
+		standardProductTable += '<td>' + standardProduct['mobileLowestPrice'] + '</td>';
+		standardProductTable += '<td>' + standardProduct['averagePrice'] + '</td>';
+		standardProductTable += '<td>' + standardProduct['cooperationCompanyCount'] + '</td>';
+		standardProductTable += '<td>' + '<input type="radio" id=' + standardProduct['seq'] + ' name="standardProduct" value="' + standardProduct['seq'] + '"></td>';
+		cooperationProductTable += '</tr>';
+	});
+	$("#standardProductTbody").html(standardProductTable);
+}
 function ajaxStandardProducts(url) {
 	$.ajax({
 		type: 'GET',
 		url: url,
 		dataType: "json",
 		success: function(response) {
-			console.log(response);
+			console.log(response['sortOrder']);
 			let currentPage = response['page']['pageable']['pageNumber'];
-			let standardProductThead = "";
-			standardProductThead += '<th>카테고리</th>';
-			standardProductThead += '<th><a onClick="getStandardProducts(1, 1, ' + currentPage + ');" href="javascript:void(0);">상품 명</a></th>';
-			standardProductThead += '<th>ⓘ</th>';
-			standardProductThead += '<th>ⓤ</th>';
-			standardProductThead += '<th><a onClick="getStandardProducts(2, 1, ' + currentPage + ');" href="javascript:void(0);">통합 최저가</a></th>';
-			standardProductThead += '<th><a onClick="getStandardProducts(3, 1, ' + currentPage + ');" href="javascript:void(0);">PC 최저가</a></th>';
-			standardProductThead += '<th><a onClick="getStandardProducts(4, 1, ' + currentPage + ');" href="javascript:void(0);">모바일 최저가</a></th>';
-			standardProductThead += '<th>평균가</th>';
-			standardProductThead += '<th><a onClick="getStandardProducts(5, 1, ' + currentPage + ');" href="javascript:void(0);">업체</a></th>';
-			standardProductThead += '<th>   </th>';
-
-			$("#standardProductThead").html(standardProductThead);
-
-			let standardProductTable = "";
-			let standardProductList = response['page']['content'];
-			$.each(standardProductList, function(index, standardProduct) {
-				standardProductTable += '<tr style="cursor:pointer;" onclick="clickStandardProduct(\'' + standardProduct['seq'] + '\');" >';
-				standardProductTable += '<td>' + standardProduct['categorySeq'] + '</td>';
-				standardProductTable += '<td onclick="event.cancelBubble=true">' + standardProduct['name'] + '</td>';
-				standardProductTable += '<td onclick="event.cancelBubble=true">ⓘ</td>';
-				standardProductTable += '<td onclick="event.cancelBubble=true">ⓤ</td>';
-				standardProductTable += '<td>' + standardProduct['combinedLowestPrice'] + '</td>';
-				standardProductTable += '<td>' + standardProduct['lowestPrice'] + '</td>';
-				standardProductTable += '<td>' + standardProduct['mobileLowestPrice'] + '</td>';
-				standardProductTable += '<td>' + standardProduct['averagePrice'] + '</td>';
-				standardProductTable += '<td>' + standardProduct['cooperationCompanyCount'] + '</td>';
-				standardProductTable += '<td>' + '<input type="radio" id=' + standardProduct['seq'] + ' name="standardProduct" value="' + standardProduct['seq'] + '"></td>';
-				cooperationProductTable += '</tr>';
-			});
-			$("#standardProductTbody").html(standardProductTable);
+			makeStandardProductThead(currentPage, makesortOrderArr(response['sortOrder']));
+			makeStandardProductTbody(response['page']['content']);
 			let pagination = makePagination(response['page']);
 			$("#standardPagination").html(pagination);
+			;
 		}
 	});
+}
+function makesortOrderArr(multiSortQuery) {
+	const multiSortArr = multiSortQuery.split(",");
+	let sortOrderArr = [];
+
+	for (let i = 0; i < multiSortArr.length; i++) {
+		const sortArr = multiSortArr[i].split(":");
+		sortOrderArr[sortArr[0]] = sortArr[1];
+	}
+	console.log(sortOrderArr);
+	return sortOrderArr;
 }
 
 function getCooperationProducts(sortSeq, orderSeq) {
@@ -185,16 +226,16 @@ function ajaxCooperationProducts(url) {
 		dataType: "json",
 		success: function(response) {
 			console.log(response);
-
+			let currentPage = response['page']['pageable']['pageNumber'];
 			let cooperationProductThead = "";
 			cooperationProductThead += '<th>협력사</th>';
 			cooperationProductThead += '<th>카테고리</th>';
-			cooperationProductThead += '<th><a onClick="findCooperationProductList(1, 1 ,1)" href="#a">상품명</a></th>';
+			cooperationProductThead += '<th><a onClick="findCooperationProducts(1, 1 ,1)" href="#a">상품명</a></th>';
 			cooperationProductThead += '<td>ⓘ</td>';
 			cooperationProductThead += '<td>ⓤ</td>';
 			cooperationProductThead += '<th>PC가격</th>';
 			cooperationProductThead += '<th>모바일 가격</th>';
-			cooperationProductThead += '<th><a onClick="findCooperationProductList(1, 2 ,1)" href="#a">최초 등록</a></th>';
+			cooperationProductThead += '<th><a onClick="findCooperationProducts(1, 2 ,1)" href="#a">최초 등록</a></th>';
 
 
 
@@ -243,12 +284,12 @@ function makePagination(paginationResponse) {
 }
 
 function makesortOrderQuery(priorityQuery, sortSeq, orderSeq) {
-	const priorityList = priorityQuery.split(",");
+	const prioritys = priorityQuery.split(",");
 	let newPriorityQuery = "";
 	let ok = false;
 
-	for (let i = 0; i < priorityList.length; i++) {
-		const sortOption = priorityList[i].split(":");
+	for (let i = 0; i < prioritys.length; i++) {
+		const sortOption = prioritys[i].split(":");
 		if (sortOption[0] == sortSeq) {
 			ok = true;
 			if (sortOption[1] == 1) {
@@ -257,7 +298,7 @@ function makesortOrderQuery(priorityQuery, sortSeq, orderSeq) {
 				newPriorityQuery += sortSeq + ':' + 1;
 			}
 		} else {
-			newPriorityQuery += priorityList[i];
+			newPriorityQuery += prioritys[i];
 		}
 		newPriorityQuery += ',';
 	}
@@ -272,7 +313,7 @@ function makesortOrderQuery(priorityQuery, sortSeq, orderSeq) {
 /* 기준 상품 tr 영역 클릭 */
 function clickStandardProduct(standardProductSeq) {
 	if (document.getElementById("linkedProductCheckBox").checked) {
-		
+		$('input[type=radio][value="' + standardProductSeq + '"]').prop('checked', true);
 		findLinkedCooperationProductByStandardProduct(standardProductSeq, 6, 3);
 	}
 }

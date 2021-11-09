@@ -1,6 +1,8 @@
 package office.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import office.dto.sort.OrderEnum;
 import office.dto.sort.SortEnum;
 import office.dto.standardProduct.StandardProductResponse;
 import office.entity.CooperationProduct;
@@ -34,14 +37,42 @@ public class StandardProductService {
 	 * @param sortPriorityStr
 	 * @return int[] sortArr
 	 */
-	public int[] makeSortArr(String sortPriorityStr) {
+	public Sort makeSortArr(String sortPriorityStr) {
+		ArrayList<String> list = new ArrayList<String>();
+
 		String[] sortPriorityList = sortPriorityStr.split(",");
 		int[] sortArr = new int[7];
 		for (String sortOrder : sortPriorityList) {
 			String[] sortOrderList = sortOrder.split(":");
 			sortArr[Integer.parseInt(sortOrderList[0])] = Integer.parseInt(sortOrderList[1]);
 		}
-		return sortArr;
+		for (String sortOrder : sortPriorityList) {
+			list.add(sortOrder);
+		}
+		list.sort(null);
+
+		Map<Integer, String> sortMap = new HashMap<Integer, String>();
+		Map<Integer, String> orderMap = new HashMap<Integer, String>();
+
+		for (SortEnum sort : SortEnum.values()) {
+			sortMap.put(sort.getCode(), sort.getName());
+		}
+		for (OrderEnum order : OrderEnum.values()) {
+			orderMap.put(order.getCode(), order.getName());
+		}
+		Sort sort = null;
+		for(int i=0; i<list.size(); i++) {
+			String[] sortOrderArr = list.get(i).split(":");
+			int sortCode = Integer.parseInt(sortOrderArr[0]);
+			int orderCode = Integer.parseInt(sortOrderArr[1]);
+			if(i==0) {
+				sort = orderMap.get(orderCode) == OrderEnum.ASC.getName() ? Sort.by(sortMap.get(sortCode)).ascending() : Sort.by(sortMap.get(sortCode)).descending();
+			} else {
+				sort = orderMap.get(orderCode) == OrderEnum.ASC.getName() ? sort.and(Sort.by(sortMap.get(sortCode)).ascending()) : sort.and(Sort.by(sortMap.get(sortCode)).descending());
+			}
+		}
+		log.info(sort+"");
+		return sort;
 	}
 
 	/**
@@ -86,7 +117,7 @@ public class StandardProductService {
 	 */
 	public Page<StandardProductResponse> findUnLinkProductByCategory(long categorySeq, String sortPriorityStr, int page) {
 
-		Pageable firstPageWithTwoElements = PageRequest.of(page, 20, getSort(makeSortArr(sortPriorityStr)));
+		Pageable firstPageWithTwoElements = PageRequest.of(page, 20, makeSortArr(sortPriorityStr));
 		Page<StandardProduct> allStandardProducts = standardProductRepository.findAllByCategorySeqAndLowestPrice(categorySeq, 0, firstPageWithTwoElements);
 		Page<StandardProductResponse> standardProductPageResponse = allStandardProducts.map(standardProduct -> standardProduct.toDTO());
 		return standardProductPageResponse;
@@ -102,7 +133,7 @@ public class StandardProductService {
 	 * @return StandardProductResponse
 	 */
 	public Page<StandardProductResponse> findLinkProductByCategory(long categorySeq, String sortPriorityStr, int page) {
-		Pageable firstPageWithTwoElements = PageRequest.of(page, 20, getSort(makeSortArr(sortPriorityStr)));
+		Pageable firstPageWithTwoElements = PageRequest.of(page, 20, makeSortArr(sortPriorityStr));
 		Page<StandardProduct> allStandardProducts = standardProductRepository.findAllByCategorySeqAndCooperationCompanyCountGreaterThan(categorySeq, 0, firstPageWithTwoElements);
 		Page<StandardProductResponse> standardProductPageResponse = allStandardProducts.map(standardProduct -> standardProduct.toDTO());
 		return standardProductPageResponse;
