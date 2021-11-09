@@ -21,7 +21,7 @@ public class CategoryController {
 	/**
 	 * @return
 	 */
-	@GetMapping(value="/categorys")
+	@GetMapping(value = "/categorys")
 	public CategoryListResponse findCategoryList() {
 		List<CategoryResponse> categoryList = categoryService.findAll();
 		CategoryListResponse categoryListResponse = new CategoryListResponse(categoryList, 200, "조회 성공");

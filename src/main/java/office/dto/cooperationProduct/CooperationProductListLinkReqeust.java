@@ -11,6 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CooperationProductListLinkReqeust {
 	String StandardProductSeq;
-	String[] cooperationProductSeqArr;
-	String[] cooperationCompanySeqArr;
+	CooperationProductIDRequest[] cooperationProductID;
 }

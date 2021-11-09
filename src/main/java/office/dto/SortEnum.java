@@ -4,14 +4,11 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum SortEnum {
-
-	SEQ(6, "seq"),
 	NAME(1, "name"),
 	LOWEST_PRICE(2, "lowestPrice"),
-	MOBILE_LOWEST_PRICE(3, "mobileLowestPrice");
-
-
-
+	MOBILE_LOWEST_PRICE(3, "mobileLowestPrice"),
+	COOPERATION_COMPANY_COUNT(4, "cooperationCompanyCount"),
+	SEQ(6, "seq");
 
 	int code;
 	String name;

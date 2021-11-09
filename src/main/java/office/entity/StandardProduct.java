@@ -64,6 +64,9 @@ public class StandardProduct {
 	@Column(name = "nCooperationCompanyCount")
 	private int cooperationCompanyCount;
 
+	@Column(name = "nCombinedLowestPrice ")
+	private int combinedLowestPrice ;
+
 
 
 	public StandardProductResponse toDTO() {
@@ -77,20 +80,17 @@ public class StandardProduct {
 				.mobileLowestPrice(mobileLowestPrice)
 				.averagePrice(averagePrice)
 				.cooperationCompanyCount(cooperationCompanyCount)
+				.combinedLowestPrice(combinedLowestPrice)
 				.build();
 	}
 
-	public StandardProduct updatePrice(int lowestPrice, int mobileLowestPrice, int averagePrice) {
-		this.lowestPrice = lowestPrice;
-		this.mobileLowestPrice = mobileLowestPrice;
-		this.averagePrice = averagePrice;
-		return this;
-	}
 
 	public StandardProduct updatePrice(StandardProduct standardProduct) {
 		this.lowestPrice = standardProduct.getLowestPrice();
 		this.mobileLowestPrice = standardProduct.getMobileLowestPrice();
 		this.cooperationCompanyCount = standardProduct.getCooperationCompanyCount();
+		this.combinedLowestPrice = standardProduct.getCombinedLowestPrice();
+		this.averagePrice = standardProduct.getAveragePrice();
 		return this;
 
 	}

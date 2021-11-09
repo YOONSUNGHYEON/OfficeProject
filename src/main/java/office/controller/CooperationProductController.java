@@ -24,27 +24,68 @@ public class CooperationProductController {
 	private final CooperationProductService cooperationProductService;
 	private final StandardProductService standardProductService;
 
+	/**
+	 * 링크 안된 협력사 상품 목록 조회
+	 *
+	 * @param searchRequest
+	 * @return cooperationProductListResponse
+	 */
 	@GetMapping("/cooperationProducts/unlink")
-	public CooperationProductListResponse findUnLinkProductByCategory(SearchRequest searchRequest) {
-		Page<CooperationProductResponse> cooperationProductResponse =  cooperationProductService.findUnLinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
+	public CooperationProductListResponse findUnlinkProductByCategory(SearchRequest searchRequest) {
+		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findUnlinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
 		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
 		return cooperationProductListResponse;
 	}
 
+	/**
+	 * 링크 된 협력사 상품 목록 조회
+	 *
+	 * @param searchRequest
+	 * @return cooperationProductListResponse
+	 */
 	@GetMapping("/cooperationProducts/link")
-	public String findLinkProductByCategory(SearchRequest searchRequest) {
-		return "/createCooperationProduct";
+	public CooperationProductListResponse findLinkProductByCategory(SearchRequest searchRequest) {
+		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findLinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
+		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
+		return cooperationProductListResponse;
 	}
 
+	/**
+	 * 링크 생성하기
+	 *
+	 * @param linkReqeust
+	 * @return
+	 */
 	@PostMapping("/cooperationProducts/link")
 	public String link(@RequestBody CooperationProductListLinkReqeust linkReqeust) {
-		String[] cooperationProductSeqArr = linkReqeust.getCooperationProductSeqArr();
-		String[] cooperationCompanySeqArr = linkReqeust.getCooperationCompanySeqArr();
-		for(int i=0; i<cooperationProductSeqArr.length; i++) {
-			CooperationProductResponse cooperationProductResponse = cooperationProductService.link(linkReqeust.getStandardProductSeq(), cooperationProductSeqArr[i], cooperationCompanySeqArr[i]);;
-			standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq(), cooperationProductResponse);
+		log.info(linkReqeust.getCooperationProductID()[0].getCooperationCompanySeq() + "");
+		for (int i = 0; i < linkReqeust.getCooperationProductID().length; i++) {
+			String cooperationProductSeq = linkReqeust.getCooperationProductID()[i].getCooperationProductSeq();
+			String cooperationCompanySeq = linkReqeust.getCooperationProductID()[i].getCooperationCompanySeq();
+			CooperationProductResponse cooperationProductResponse = cooperationProductService.link(linkReqeust.getStandardProductSeq(), cooperationProductSeq, cooperationCompanySeq);
+			standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq());
 		}
 
 		return "/createCooperationProduct";
 	}
+
+	/**
+	 * 링크 해제하기
+	 *
+	 * @param linkReqeust
+	 * @return
+	 */
+	@PostMapping("/cooperationProducts/unlink")
+	public String unlink(@RequestBody CooperationProductListLinkReqeust linkReqeust) {
+		log.info(linkReqeust.getCooperationProductID()[0].getCooperationCompanySeq() + "");
+		for (int i = 0; i < linkReqeust.getCooperationProductID().length; i++) {
+			String cooperationProductSeq = linkReqeust.getCooperationProductID()[i].getCooperationProductSeq();
+			String cooperationCompanySeq = linkReqeust.getCooperationProductID()[i].getCooperationCompanySeq();
+			CooperationProductResponse cooperationProductResponse = cooperationProductService.unlink(linkReqeust.getStandardProductSeq(), cooperationProductSeq, cooperationCompanySeq);
+			standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq());
+		}
+
+		return "/createCooperationProduct";
+	}
+
 }

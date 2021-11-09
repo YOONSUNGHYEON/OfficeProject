@@ -41,22 +41,36 @@ public class CooperationProductService {
 		return sort;
 	}
 
-	public Page<CooperationProductResponse> findUnLinkProductByCategory(long categorySeq, String sortPriorityStr) {
-		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository
-				.findAllByCategorySeqAndStandardProductSeq(categorySeq, null, PageRequest.of(0, 20));
-		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductPage
-				.map(cooperationProduct -> cooperationProduct.toDTO());
+	public Page<CooperationProductResponse> findLinkProductByCategory(int categorySeq, String sortOrder) {
+		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findAllByCategorySeqAndStandardProductSeqNotNull(categorySeq, PageRequest.of(0, 20));
+		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductPage.map(cooperationProduct -> cooperationProduct.toDTO());
+		return cooperationProductResponse;
+	}
+
+	public Page<CooperationProductResponse> findUnlinkProductByCategory(long categorySeq, String sortPriorityStr) {
+		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findAllByCategorySeqAndStandardProductSeq(categorySeq, null, PageRequest.of(0, 20));
+		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductPage.map(cooperationProduct -> cooperationProduct.toDTO());
 		return cooperationProductResponse;
 
+	}
+
+	public Page<CooperationProductResponse> findByStandardProductSeq(String standardProductSeq) {
+		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findByStandardProductSeq(standardProductSeq, PageRequest.of(0, 20));
+		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductPage.map(cooperationProduct -> cooperationProduct.toDTO());
+		return cooperationProductResponse;
 	}
 
 	public CooperationProductResponse link(String standardProductSeq, String cooperationProductSeq, String cooperationCompanySeq) {
-		CooperationProduct cooperationProduct = cooperationProductRepository
-				.findByCooperationProductSeqAndCooperationCompanySeq(cooperationProductSeq, cooperationCompanySeq);
-		StandardProduct standardProduct = StandardProduct.builder()
-									.seq(standardProductSeq)
-									.build();
-		CooperationProductResponse cooperationProductResponse =  cooperationProductRepository.save(cooperationProduct.updateStandardProduct(standardProduct)).toDTO();
+		CooperationProduct cooperationProduct = cooperationProductRepository.findByCooperationProductSeqAndCooperationCompanySeq(cooperationProductSeq, cooperationCompanySeq);
+		StandardProduct standardProduct = StandardProduct.builder().seq(standardProductSeq).build();
+		CooperationProductResponse cooperationProductResponse = cooperationProductRepository.save(cooperationProduct.updateStandardProduct(standardProduct)).toDTO();
 		return cooperationProductResponse;
 	}
+
+	public CooperationProductResponse unlink(String standardProductSeq, String cooperationProductSeq, String cooperationCompanySeq) {
+		CooperationProduct cooperationProduct = cooperationProductRepository.findByCooperationProductSeqAndCooperationCompanySeq(cooperationProductSeq, cooperationCompanySeq);
+		CooperationProductResponse cooperationProductResponse = cooperationProductRepository.save(cooperationProduct.updateStandardProduct(null)).toDTO();
+		return cooperationProductResponse;
+	}
+
 }

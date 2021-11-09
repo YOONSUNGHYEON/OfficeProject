@@ -9,7 +9,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import office.entity.CooperationProduct;
 import office.entity.CooperationProductID;
-import office.entity.StandardProduct;
 
 public interface CooperationProductRepository extends PagingAndSortingRepository<CooperationProduct, CooperationProductID>{
 
@@ -20,7 +19,12 @@ public interface CooperationProductRepository extends PagingAndSortingRepository
 
 	CooperationProduct findByCooperationProductSeqAndCooperationCompanySeq(String cooperationProductSeq, String cooperationCompanySeq);
 
-	ArrayList<StandardProduct> findByStandardProductSeq(String standardProductSeq);
+	ArrayList<CooperationProduct> findByStandardProductSeq(String standardProductSeq);
 
+	Page<CooperationProduct> findByStandardProductSeq(String standardProductSeq, Pageable pageable);
+
+
+
+	Page<CooperationProduct> findAllByCategorySeqAndStandardProductSeqNotNull(long categorySeq, Pageable pageable);
 
 }

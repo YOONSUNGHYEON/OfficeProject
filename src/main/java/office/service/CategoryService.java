@@ -18,6 +18,7 @@ public class CategoryService {
 
 	/**
 	 * 카테고리 목록 조회
+	 *
 	 * @return ArrayList<CategoryDTO>
 	 */
 	public List<CategoryResponse> findAll() {
