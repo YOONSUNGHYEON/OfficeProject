@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import office.dto.sort.OrderEnum;
-import office.dto.sort.SortEnum;
+import office.dto.sort.StandardProductSortEnum;
 import office.dto.standardProduct.StandardProductResponse;
 import office.entity.CooperationProduct;
 import office.entity.StandardProduct;
@@ -54,24 +54,24 @@ public class StandardProductService {
 		Map<Integer, String> sortMap = new HashMap<Integer, String>();
 		Map<Integer, String> orderMap = new HashMap<Integer, String>();
 
-		for (SortEnum sort : SortEnum.values()) {
+		for (StandardProductSortEnum sort : StandardProductSortEnum.values()) {
 			sortMap.put(sort.getCode(), sort.getName());
 		}
 		for (OrderEnum order : OrderEnum.values()) {
 			orderMap.put(order.getCode(), order.getName());
 		}
 		Sort sort = null;
-		for(int i=0; i<list.size(); i++) {
+		for (int i = 0; i < list.size(); i++) {
 			String[] sortOrderArr = list.get(i).split(":");
 			int sortCode = Integer.parseInt(sortOrderArr[0]);
 			int orderCode = Integer.parseInt(sortOrderArr[1]);
-			if(i==0) {
+			if (i == 0) {
 				sort = orderMap.get(orderCode) == OrderEnum.ASC.getName() ? Sort.by(sortMap.get(sortCode)).ascending() : Sort.by(sortMap.get(sortCode)).descending();
 			} else {
 				sort = orderMap.get(orderCode) == OrderEnum.ASC.getName() ? sort.and(Sort.by(sortMap.get(sortCode)).ascending()) : sort.and(Sort.by(sortMap.get(sortCode)).descending());
 			}
 		}
-		log.info(sort+"");
+		log.info(sort + "");
 		return sort;
 	}
 
@@ -82,28 +82,7 @@ public class StandardProductService {
 	 * @return Sort
 	 */
 	public Sort getSort(int[] sortArr) {
-
 		Sort sort = null;
-		if (sortArr[1] != 0) {
-			sort = sortArr[1] == 1 ? sort.by(SortEnum.NAME.getName()).ascending() : sort.by(SortEnum.NAME.getName()).descending();
-		}
-		if (sortArr[2] != 0) {
-			sort = sortArr[2] == 1 ? sort.and(sort.by(SortEnum.COMBINED_LOWEST_PRICE.getName()).ascending()) : sort.and(sort.by(SortEnum.COMBINED_LOWEST_PRICE.getName()).descending());
-		}
-		if (sortArr[3] != 0) {
-			sort = sortArr[3] == 1 ? sort.and(sort.by(SortEnum.LOWEST_PRICE.getName()).ascending()) : sort.and(sort.by(SortEnum.LOWEST_PRICE.getName()).descending());
-		}
-		if (sortArr[4] != 0) {
-			sort = sortArr[4] == 1 ? sort.and(sort.by(SortEnum.MOBILE_LOWEST_PRICE.getName()).ascending()) : sort.and(sort.by(SortEnum.MOBILE_LOWEST_PRICE.getName()).descending());
-		}
-		if (sortArr[5] != 0) {
-			sort = sortArr[5] == 1 ? sort.and(sort.by(SortEnum.COOPERATION_COMPANY_COUNT.getName()).ascending()) : sort.and(sort.by(SortEnum.COOPERATION_COMPANY_COUNT.getName()).descending());
-		}
-		if (sortArr[6] != 0) {
-			sort = Sort.by("seq").descending();
-		}
-
-		log.info(sort.toString());
 		return sort;
 	}
 

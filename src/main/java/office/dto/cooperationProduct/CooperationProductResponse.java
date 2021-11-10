@@ -17,6 +17,7 @@ import office.entity.StandardProduct;
 public class CooperationProductResponse {
 	private String cooperationProductSeq;
 	private String cooperationCompanySeq;
+	private String cooperationCompanyName;
 	private StandardProduct standardProduct;
 	private Category category;
 	private String name;

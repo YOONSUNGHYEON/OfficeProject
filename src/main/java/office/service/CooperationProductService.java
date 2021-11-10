@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import office.dto.cooperationProduct.CooperationProductResponse;
-import office.dto.sort.SortEnum;
+import office.dto.sort.StandardProductSortEnum;
 import office.entity.CooperationProduct;
 import office.entity.StandardProduct;
 import office.repository.CooperationProductRepository;
@@ -24,10 +24,10 @@ public class CooperationProductService {
 	public Sort getSort(String sortPriorityStr) {
 		Sort sort = null;
 		String[] sortPriorityList = sortPriorityStr.split(",");
-		SortEnum[] SortEnumList = SortEnum.values();
+		StandardProductSortEnum[] SortEnumList = StandardProductSortEnum.values();
 		for (String sortOrder : sortPriorityList) {
 			String[] sortOrderList = sortOrder.split(":");
-			for (SortEnum sortEnum : SortEnumList) {
+			for (StandardProductSortEnum sortEnum : SortEnumList) {
 				if (sortEnum.getCode() == Integer.parseInt(sortOrderList[0])) {
 					sort = sort.by(sortEnum.getName());
 				}
@@ -61,8 +61,12 @@ public class CooperationProductService {
 	}
 
 	public CooperationProductResponse link(String standardProductSeq, String cooperationProductSeq, String cooperationCompanySeq) {
+		log.info("standardProductSeq "+standardProductSeq);
+		log.info("cooperationProductSeq "+cooperationProductSeq);
+		log.info("cooperationCompanySeq "+cooperationCompanySeq);
 		CooperationProduct cooperationProduct = cooperationProductRepository.findByCooperationProductSeqAndCooperationCompanySeq(cooperationProductSeq, cooperationCompanySeq);
 		StandardProduct standardProduct = StandardProduct.builder().seq(standardProductSeq).build();
+		log.info(cooperationProduct.getCooperationCompany()+"sss");
 		CooperationProductResponse cooperationProductResponse = cooperationProductRepository.save(cooperationProduct.updateStandardProduct(standardProduct)).toDTO();
 		return cooperationProductResponse;
 	}

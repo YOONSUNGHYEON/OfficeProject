@@ -15,6 +15,6 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class CooperationProductID implements Serializable{
 	private String cooperationProductSeq;
-	private String cooperationCompanySeq;
+	private CooperationCompany cooperationCompany;
 
 }

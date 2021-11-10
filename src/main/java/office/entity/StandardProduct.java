@@ -73,6 +73,7 @@ public class StandardProduct {
 		return StandardProductResponse.builder()
 				.seq(seq)
 				.categorySeq(category.getSeq())
+				.categoryName(category.getName())
 				.name(name)
 				.imageURL(imageURL)
 				.imageSource(imageSource)

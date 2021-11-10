@@ -49,12 +49,12 @@ function link() {
 		contentType: 'application/json',
 		dataType: "json",
 		success: function(response) {
-			if(response['code']==200){
+			if (response['code'] == 200) {
 				alert("링크를 생성했습니다.");
 				getStandardProducts(6, 3, 1);
 				getCooperationProducts(6, 3);
 			}
-			
+
 		}
 	})
 }
@@ -72,16 +72,14 @@ function unLink() {
 		contentType: 'application/json',
 		dataType: "json",
 		success: function(response) {
-			if(response['code']==200){
+			if (response['code'] == 200) {
 				alert("링크를 해제했습니다.");
 				getStandardProducts(6, 3, 1);
 				getCooperationProducts(6, 3);
-				
+
 			}
-			
+
 		}
-
-
 	})
 }
 
@@ -105,8 +103,6 @@ function searchProduct(sortSeq, orderSeq, page) {
 	getStandardProducts(6, 2, 0);
 	getCooperationProducts(6, 2, 0);
 }
-
-
 
 function getStandardProducts(sortSeq, orderSeq, page) {
 	let categorySeq = document.getElementById('categorySelect').value;
@@ -159,7 +155,7 @@ function makeStandardProductTbody(standardProducts) {
 	let standardProductTable = "";
 	$.each(standardProducts, function(index, standardProduct) {
 		standardProductTable += '<tr style="cursor:pointer;" onclick="clickStandardProduct(\'' + standardProduct['seq'] + '\');" >';
-		standardProductTable += '<td>' + standardProduct['categorySeq'] + '</td>';
+		standardProductTable += '<td>' + standardProduct['categoryName'] + '</td>';
 		standardProductTable += '<td onclick="event.cancelBubble=true">' + standardProduct['name'] + '</td>';
 		standardProductTable += '<td onclick="event.cancelBubble=true">ⓘ</td>';
 		standardProductTable += '<td onclick="event.cancelBubble=true">ⓤ</td>';
@@ -179,13 +175,13 @@ function ajaxStandardProducts(url) {
 		url: url,
 		dataType: "json",
 		success: function(response) {
-			console.log(response['sortOrder']);
+			console.log(response);
 			let currentPage = response['page']['pageable']['pageNumber'];
 			makeStandardProductThead(currentPage, makesortOrderArr(response['sortOrder']));
 			makeStandardProductTbody(response['page']['content']);
-			let pagination = makePagination(response['page']);
+			let pagination = makePagination(response['page'], currentPage);
 			$("#standardPagination").html(pagination);
-			;
+
 		}
 	});
 }
@@ -243,7 +239,7 @@ function ajaxCooperationProducts(url) {
 			$.each(response['page']['content'], function(index, cooperationProduct) {
 				cooperationProductTable += '<tr style="cursor:pointer;">';
 				cooperationProductTable += '<td><input type="checkbox" name="cooperationProductSeq" value="' + cooperationProduct['cooperationProductSeq'] + '"></td>';
-				cooperationProductTable += '<td> <input type="hidden" id="cooperationCompanySeq" name="cooperationCompanySeq" value="' + cooperationProduct["cooperationCompanySeq"] + '">' + cooperationProduct["cooperationCompanySeq"] + '</td>';
+				cooperationProductTable += '<td> <input type="hidden" id="cooperationCompanySeq" name="cooperationCompanySeq" value="' + cooperationProduct["cooperationCompanySeq"] + '">' + cooperationProduct["cooperationCompanyName"] + '</td>';
 				cooperationProductTable += '<td>' + cooperationProduct['category']['name'] + '</td>';
 				cooperationProductTable += '<td>' + cooperationProduct['name'] + '</td>';
 				cooperationProductTable += '<td><a target="_blank" href="' + cooperationProduct['name'] + '">ⓘ</td>'
@@ -263,23 +259,34 @@ function ajaxCooperationProducts(url) {
 	})
 
 }
-
+/* 페이지네이션 제작 */
 function makePagination(paginationResponse) {
+	const blockPage = 10; //보여줄 페이지 수
+	const currentPage = paginationResponse['pageable']['pageNumber']; //현재 페이지 넘버
+	const startPage = Math.floor(currentPage / blockPage) * 10; // 현재 페이지 묶음시작 페이지
+	const nextArrow = (Math.floor(currentPage / blockPage) - 1) * 10; // 전 페이지 묶음 시작 페이지
+	const prevArrow = (Math.floor(currentPage / blockPage) + 1) * 10; // 다음 페이지 묶음 시작 페이지
+	const totalLastPage = Math.floor(paginationResponse['totalPages'] / blockPage) *10; // 전체 마지막 페이지 묶음 시작 페이지
 	let pagination = "";
-	//let preArrow = Number(tableData['aPageData']['nCurrentPage']) - Number(tableData['aPageData']['nBlockPage']);
-	//let nextArrow = Number(tableData['aPageData']['nCurrentPage']) + Number(tableData['aPageData']['nBlockPage']);
-	pagination += '<a class="arrow" onClick="" href="#a"><<</a>';
-	pagination += '<a class="arrow" onClick="" href="javascript:void(0);">&lt;</a>';
-	for (let i = 0; i < paginationResponse['totalPages']; i++) {
-		let currentPage = i + 1;
-		if (paginationResponse['pageable']['pageNumber'] == i) {
-			pagination += '<a class="active" onClick="getStandardProducts(6, 2, ' + i + ')"  href="javascript:void(0);">' + currentPage + '</a>';
+	if (startPage != 0) {
+		pagination += '<a class="arrow" onClick="getStandardProducts(6, 2, 0)" href="#a"><<</a>';
+		pagination += '<a class="arrow" onClick="getStandardProducts(6, 2, ' + nextArrow + ')" href="javascript:void(0);">&lt;</a>';
+	}
+	for (let i = startPage; i < startPage + blockPage; i++) {
+		let pageNumber = i + 1;
+		if (currentPage == i) {
+			pagination += '<a class="active" onClick="getStandardProducts(6, 2, ' + i + ')"  href="javascript:void(0);">' + pageNumber + '</a>';
 		} else {
-			pagination += '<a onClick="getStandardProducts(6, 2, ' + i + ')"  href="javascript:void(0);">' + currentPage + '</a>';
+			pagination += '<a onClick="getStandardProducts(6, 2, ' + i + ')"  href="javascript:void(0);">' + pageNumber + '</a>';
+		}
+		if (paginationResponse['numberOfElements'] < 20) {
+			break;
 		}
 	}
-	pagination += '<a class="arrow" onClick="" href="#a">></a>';
-	pagination += '<a class="arrow" onClick="" href="javascript:void(0);">>></a>';
+	if (totalLastPage != startPage) {
+		pagination += '<a class="arrow" onClick="getStandardProducts(6, 2, ' + prevArrow + ')" href="#a">></a>';
+		pagination += '<a class="arrow" onClick="getStandardProducts(6, 2, ' + (paginationResponse['totalPages'] - 1) + ')" href="javascript:void(0);">>></a>';
+	}
 	return pagination;
 }
 

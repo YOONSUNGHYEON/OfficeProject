@@ -33,10 +33,8 @@ public class CooperationProductController {
 	 */
 	@GetMapping("/cooperationProducts/unlink")
 	public CooperationProductListResponse findUnlinkProductByCategory(SearchRequest searchRequest) {
-		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService
-				.findUnlinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
-		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(
-				searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
+		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findUnlinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
+		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
 		return cooperationProductListResponse;
 	}
 
@@ -48,10 +46,8 @@ public class CooperationProductController {
 	 */
 	@GetMapping("/cooperationProducts/link")
 	public CooperationProductListResponse findLinkProductByCategory(SearchRequest searchRequest) {
-		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService
-				.findLinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
-		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(
-				searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
+		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findLinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
+		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
 		return cooperationProductListResponse;
 	}
 
@@ -67,8 +63,7 @@ public class CooperationProductController {
 		for (int i = 0; i < linkReqeust.getCooperationProductID().length; i++) {
 			String cooperationProductSeq = linkReqeust.getCooperationProductID()[i].getCooperationProductSeq();
 			String cooperationCompanySeq = linkReqeust.getCooperationProductID()[i].getCooperationCompanySeq();
-			CooperationProductResponse cooperationProductResponse = cooperationProductService
-					.link(linkReqeust.getStandardProductSeq(), cooperationProductSeq, cooperationCompanySeq);
+			CooperationProductResponse cooperationProductResponse = cooperationProductService.link(linkReqeust.getStandardProductSeq(), cooperationProductSeq, cooperationCompanySeq);
 			standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq());
 		}
 		return new ResultResponse(200, "링크 생성 성공");
@@ -86,8 +81,7 @@ public class CooperationProductController {
 		for (int i = 0; i < linkReqeust.getCooperationProductID().length; i++) {
 			String cooperationProductSeq = linkReqeust.getCooperationProductID()[i].getCooperationProductSeq();
 			String cooperationCompanySeq = linkReqeust.getCooperationProductID()[i].getCooperationCompanySeq();
-			CooperationProductResponse cooperationProductResponse = cooperationProductService
-					.unlink(linkReqeust.getStandardProductSeq(), cooperationProductSeq, cooperationCompanySeq);
+			CooperationProductResponse cooperationProductResponse = cooperationProductService.unlink(linkReqeust.getStandardProductSeq(), cooperationProductSeq, cooperationCompanySeq);
 			standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq());
 		}
 

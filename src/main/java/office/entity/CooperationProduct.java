@@ -37,8 +37,9 @@ public class CooperationProduct implements Serializable{
 	private String cooperationProductSeq;
 
 	@Id
-	@Column(name="sCooperationCompanySeq", updatable=false)
-	private String cooperationCompanySeq;
+	@ManyToOne
+	@JoinColumn(name="sCooperationCompanySeq", updatable=false)
+	private CooperationCompany cooperationCompany;
 
 	@ManyToOne
     @JoinColumn(name="sStandardProductSeq")
@@ -69,7 +70,8 @@ public class CooperationProduct implements Serializable{
 
     public CooperationProductResponse toDTO() {
     	return CooperationProductResponse.builder()
-    			.cooperationCompanySeq(cooperationCompanySeq)
+    			.cooperationCompanyName(cooperationCompany.getName())
+    			.cooperationCompanySeq(cooperationCompany.getSeq())
     			.cooperationProductSeq(cooperationProductSeq)
     			.category(category)
     			.standardProduct(standardProduct)
