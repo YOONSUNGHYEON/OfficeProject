@@ -21,7 +21,4 @@ public interface StandardProductRepository extends PagingAndSortingRepository<St
 
 	StandardProduct findBySeq(String seq);
 
-	@Override
-	StandardProduct save(StandardProduct standardProduct);
-
 }

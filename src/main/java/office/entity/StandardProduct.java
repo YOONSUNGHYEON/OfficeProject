@@ -72,7 +72,6 @@ public class StandardProduct {
 	public StandardProductResponse toDTO() {
 		return StandardProductResponse.builder()
 				.seq(seq)
-				.categorySeq(category.getSeq())
 				.categoryName(category.getName())
 				.name(name)
 				.imageURL(imageURL)

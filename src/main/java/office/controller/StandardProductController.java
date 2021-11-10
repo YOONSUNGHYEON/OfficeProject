@@ -59,7 +59,7 @@ public class StandardProductController {
 	 */
 	@GetMapping(value = "/standardProduct/{standardProductSeq}")
 	public CooperationProductListResponse findLinkedCooperationProductList(@PathVariable("standardProductSeq") String standardProductSeq, SearchRequest searchRequest) {
-		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findByStandardProductSeq(standardProductSeq);
+		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findByStandardProductSeq(standardProductSeq, searchRequest.getSortOrder());
 		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
 		return cooperationProductListResponse;
 

@@ -14,7 +14,6 @@ import lombok.Setter;
 @Builder
 public class StandardProductResponse {
 	private String seq;
-	private Long categorySeq;
 	private String categoryName;
 	private String name;
 	private String imageURL;

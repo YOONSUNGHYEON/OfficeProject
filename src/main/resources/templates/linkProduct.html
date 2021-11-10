@@ -29,11 +29,11 @@
 							<span class='blueText'> 링크된상품 </span>
 						</label>
 						<label>
-							<input type='radio' name='link' value='1'>
+							<input type='radio' name='link' value='1' onClick="checkUnlinked()">
 							<span class='blueText'> 링크안된상품 </span>
 						</label>
 						<label>
-							<input type='checkbox' name='linkedProduct' id='linkedProductCheckBox'  value='2'>
+							<input type='checkbox' name='linkedProduct' id='linkedProductCheckBox' onClick="checkLinked()"  value='2'>
 							링크상품보기
 						</label>
 
@@ -87,7 +87,7 @@
 						<table id='cooperationProductTable' border='1'>
 							<thead id='cooperationProductThead'>
 								<tr>
-									<th></th>
+									<th><input id="checkAll" type="checkbox"></th>
 									<th>협력사</th>
 									<th>카테고리</th>
 									<th>상품명</th>
@@ -111,6 +111,7 @@
 		</form>
 
 	</div>
+	<script type='text/javascript' async='true' src='js/selectAll.js'></script>
 	<script type='text/javascript' async='true' src='js/linkProduct.js'></script>
 </body>
 </html>
