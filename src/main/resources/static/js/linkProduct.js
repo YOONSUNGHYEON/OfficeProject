@@ -32,7 +32,7 @@ function makeSelect(optionDatas) {
 	return dataSelect;
 }
 
-let sortOrder = "";
+
 /* 링크 생성 클릭 -> 링크 생성 */
 function link() {
 	let standardProductSeq = document.querySelector('input[name="standardProduct"]:checked').value;
@@ -49,8 +49,10 @@ function link() {
 		success: function(response) {
 			if (response['code'] == 200) {
 				alert("링크를 생성했습니다.");
-				getStandardProducts(6, 2, 1);
-				getCooperationProducts(3, 2, 1);
+				getStandardProducts(6, 2, 0);
+				getCooperationProducts(3, 2, 0);
+			} else if(response['code'] == 400){
+				alert("이미 링크가 되어 있는 상품 입니다.");
 			}
 
 		}
@@ -70,11 +72,13 @@ function unLink() {
 		contentType: 'application/json',
 		dataType: "json",
 		success: function(response) {
+			console.log(response);
 			if (response['code'] == 200) {
 				alert("링크를 해제했습니다.");
-				getStandardProducts(6, 2, 1);
-				getCooperationProducts(3, 2, 1);
-
+				getStandardProducts(6, 2, 0);
+				getCooperationProducts(3, 2, 0);
+			} else if(response['code'] == 400){
+				alert("이미 링크가 해제 되어 있는 상품입니다.");
 			}
 
 		}
@@ -101,20 +105,21 @@ function searchProduct(sortSeq, orderSeq, page) {
 	getStandardProducts(6, 2, 0);
 	getCooperationProducts(3, 2, 0);
 }
-
+let standardSortOrder = "";
+let cooperationSortOrder = "";
 function getStandardProducts(sortSeq, orderSeq, page) {
 	let categorySeq = document.getElementById('categorySelect').value;
 	let linkOption = document.querySelector('input[name="link"]:checked').value;
 	let url = '';
-	if (sortSeq + ':' + orderSeq == "6:2" || sortOrder == "6:2") {
-		sortOrder = sortSeq + ":" + orderSeq;
+	if (sortSeq + ':' + orderSeq == "6:2" || standardSortOrder == "6:2") {
+		standardSortOrder = sortSeq + ":" + orderSeq;
 	} else {
-		sortOrder = makesortOrderQuery(sortOrder, sortSeq, orderSeq);
+		standardSortOrder = makesortOrderQuery(standardSortOrder, sortSeq, orderSeq);
 	}
 	if (linkOption == 1) {
-		url = '/standardProducts?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder;
+		url = '/standardProducts?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + standardSortOrder;
 	} else {
-		url = '/standardProducts/link?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder;
+		url = '/standardProducts/link?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + standardSortOrder;
 	}
 	ajaxStandardProducts(url);
 }
@@ -150,15 +155,15 @@ function makeStandardProductThead(currentPage, sortOrderArr) {
 
 /* 기준 상품 Table > Tbody 에 들어갈 html 만들기 */
 function makeStandardProductTbody(standardProducts) {
-	let editUrl = 'http://192.168.56.102/DanawaOfficeProject/createStandardProduct.html?seq=';
-	let blogUrl = 'http://192.168.56.102/DanawaOfficeProject/blog.html?seq=';
+	let editUrl = 'http://192.168.56.106/DanawaOfficeProject/createStandardProduct.html?seq=';
+	let blogUrl = 'http://192.168.56.106/DanawaOfficeProject/blog.html?seq=';
 	let standardProductTable = "";
 	$.each(standardProducts, function(index, standardProduct) {
 		standardProductTable += '<tr style="cursor:pointer;" onclick="clickStandardProduct(\'' + standardProduct['seq'] + '\');" >';
 		standardProductTable += '<td>' + standardProduct['categoryName'] + '</td>';
-		standardProductTable += '<td onclick="event.cancelBubble=true"> <a href="' + editUrl + standardProduct['seq'] + '">' + standardProduct['name'] + '</a></td>';
-		standardProductTable += '<td onclick="event.cancelBubble=true"><a href="' + blogUrl + standardProduct['seq'] + '">ⓘ</a></td>';
-		standardProductTable += '<td onclick="event.cancelBubble=true">ⓤ</td>';
+		standardProductTable += '<td onclick="event.cancelBubble=true"> <a href="' + editUrl + standardProduct['seq'] + '"><p>' + standardProduct['name'] + '</p></a></td>';
+		standardProductTable += '<td class="preImg" onclick="event.cancelBubble=true"><input name="imageURL" type="hidden" value="'+ standardProduct['imageURL'] +'">ⓘ</td>';
+		standardProductTable += '<td onclick="event.cancelBubble=true"><a href="' + blogUrl + standardProduct['seq'] + '">ⓤ</a></td>';
 		standardProductTable += '<td>' + standardProduct['combinedLowestPrice'] + '</td>';
 		standardProductTable += '<td>' + standardProduct['lowestPrice'] + '</td>';
 		standardProductTable += '<td>' + standardProduct['mobileLowestPrice'] + '</td>';
@@ -179,7 +184,7 @@ function ajaxStandardProducts(url) {
 			let currentPage = response['page']['pageable']['pageNumber'];
 			makeStandardProductThead(currentPage, makesortOrderArr(response['sortOrder']));
 			makeStandardProductTbody(response['page']['content']);
-			let pagination = makePagination(response['page'], currentPage);
+			let pagination = makePagination(response['page'], "standardProduct");
 			$("#standardPagination").html(pagination);
 
 		}
@@ -199,15 +204,15 @@ function getCooperationProducts(sortSeq, orderSeq, page) {
 	const categorySeq = document.getElementById('categorySelect').value;
 	const linkOption = document.querySelector('input[name="link"]:checked').value;
 	let url = '';
-	if (sortSeq + ':' + orderSeq == "6:2" || sortOrder == "6:2") {
-		sortOrder = sortSeq + ":" + orderSeq;
+	if (sortSeq + ':' + orderSeq == "3:2") {
+		cooperationSortOrder = sortSeq + ":" + orderSeq;
 	} else {
-		sortOrder = makesortOrderQuery(sortOrder, sortSeq, orderSeq);
+		cooperationSortOrder = makesortOrderQuery(cooperationSortOrder, sortSeq, orderSeq);
 	}
 	if (linkOption == 1) {
-		url = '/cooperationProducts/unlink?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder;
+		url = '/cooperationProducts/unlink?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + cooperationSortOrder;
 	} else {
-		url = '/cooperationProducts/link?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder;
+		url = '/cooperationProducts/link?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + cooperationSortOrder;
 	}
 	ajaxCooperationProducts(url);
 }
@@ -249,7 +254,7 @@ function makeCooperationProductTbody(cooperationProducts) {
 		cooperationProductTable += '<td><input type="checkbox" name="cooperationProductSeq" onclick="checkSelectAll(this)" value="' + cooperationProduct['cooperationProductSeq'] + '"></td>';
 		cooperationProductTable += '<td> <input type="hidden" id="cooperationCompanySeq" name="cooperationCompanySeq" value="' + cooperationProduct["cooperationCompanySeq"] + '">' + cooperationProduct["cooperationCompanyName"] + '</td>';
 		cooperationProductTable += '<td>' + cooperationProduct['categoryName']+ '</td>';
-		cooperationProductTable += '<td>' + cooperationProduct['name'] + '</td>';
+		cooperationProductTable += '<td title="' + cooperationProduct['name'] + '" class="productName" ><p>' + cooperationProduct['name'] + '</p></td>';
 		cooperationProductTable += '<td><a target="_blank" href="' + cooperationProduct['name'] + '">ⓘ</td>'
 		cooperationProductTable += '<td><a target="_blank" href="' + cooperationProduct['url'] + '">ⓤ</a></td>';
 		cooperationProductTable += '<td>' + cooperationProduct['price'] + '</td>';
@@ -266,11 +271,11 @@ function ajaxCooperationProducts(url) {
 		url: url,
 		dataType: "json",
 		success: function(response) {
+			console.log(response);
 			let currentPage = response['page']['pageable']['pageNumber'];
 			makeCooperationProductThead(currentPage, makesortOrderArr(response['sortOrder']));
 			makeCooperationProductTbody(response['page']['content']);
-			let paginationResponse = response['page'];
-			let pagination = makePagination(paginationResponse);
+			let pagination = makePagination(response['page'], 'cooperationProduct');
 			$("#cooperationPagination").html(pagination);
 		}
 
@@ -278,7 +283,7 @@ function ajaxCooperationProducts(url) {
 
 }
 /* 페이지네이션 제작 */
-function makePagination(paginationResponse) {
+function makePagination(paginationResponse, option) {
 	const blockPage = 10; //보여줄 페이지 수
 	const currentPage = paginationResponse['pageable']['pageNumber']; //현재 페이지 넘버
 	const startPage = Math.floor(currentPage / blockPage) * 10; // 현재 페이지 묶음시작 페이지
@@ -286,24 +291,30 @@ function makePagination(paginationResponse) {
 	const prevArrow = (Math.floor(currentPage / blockPage) + 1) * 10; // 다음 페이지 묶음 시작 페이지
 	const totalLastPage = Math.floor(paginationResponse['totalPages'] / blockPage) * 10; // 전체 마지막 페이지 묶음 시작 페이지
 	let pagination = "";
+	if(option =="standardProduct") {
+		option  = "getStandardProducts(6, 2,";
+	}else {
+		option  = "getCooperationProducts(3, 2,";
+	}
+	
 	if (startPage != 0) {
-		pagination += '<a class="arrow" onClick="getStandardProducts(6, 2, 0)" href="#a"><<</a>';
-		pagination += '<a class="arrow" onClick="getStandardProducts(6, 2, ' + nextArrow + ')" href="javascript:void(0);">&lt;</a>';
+		pagination += '<a class="arrow" onClick="'+ option +' 0)" href="#a"><<</a>';
+		pagination += '<a class="arrow" onClick=" '+ option + nextArrow + ')" href="javascript:void(0);">&lt;</a>';
 	}
 	for (let i = startPage; i < startPage + blockPage; i++) {
 		let pageNumber = i + 1;
 		if (currentPage == i) {
-			pagination += '<a class="active" onClick="getStandardProducts(6, 2, ' + i + ')"  href="javascript:void(0);">' + pageNumber + '</a>';
+			pagination += '<a class="active" onClick=" ' + option + i + ')"  href="javascript:void(0);">' + pageNumber + '</a>';
 		} else {
-			pagination += '<a onClick="getStandardProducts(6, 2, ' + i + ')"  href="javascript:void(0);">' + pageNumber + '</a>';
+			pagination += '<a onClick="' + option + i + ')"  href="javascript:void(0);">' + pageNumber + '</a>';
 		}
 		if (paginationResponse['numberOfElements'] < 20) {
 			break;
 		}
 	}
 	if (totalLastPage != startPage) {
-		pagination += '<a class="arrow" onClick="getStandardProducts(6, 2, ' + prevArrow + ')" href="#a">></a>';
-		pagination += '<a class="arrow" onClick="getStandardProducts(6, 2, ' + (paginationResponse['totalPages'] - 1) + ')" href="javascript:void(0);">>></a>';
+		pagination += '<a class="arrow" onClick="'+ option + prevArrow + ')" href="#a">></a>';
+		pagination += '<a class="arrow" onClick="' + option + (paginationResponse['totalPages'] - 1) + ')" href="javascript:void(0);">>></a>';
 	}
 	return pagination;
 }
@@ -312,7 +323,6 @@ function makesortOrderQuery(priorityQuery, sortSeq, orderSeq) {
 	const prioritys = priorityQuery.split(",");
 	let newPriorityQuery = "";
 	let ok = false;
-
 	for (let i = 0; i < prioritys.length; i++) {
 		const sortOption = prioritys[i].split(":");
 		if (sortOption[0] == sortSeq) {
@@ -347,13 +357,8 @@ function clickStandardProduct(standardProductSeq) {
 function findLinkedCooperationProductByStandardProduct(standardProductSeq, sortSeq, orderSeq) {
 	let categorySeq = document.getElementById('categorySelect').value;
 	let page = 1;
-
-	if (sortSeq + ':' + orderSeq == "6:2" || sortOrder == "6:2") {
-		sortOrder = sortSeq + ":" + orderSeq;
-	} else {
-		sortOrder = makesortOrderQuery(sortOrder, sortSeq, orderSeq);
-	}
-	url = '/standardProduct/' + standardProductSeq + '?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + sortOrder;
+	cooperationSortOrder = makesortOrderQuery(cooperationSortOrder, sortSeq, orderSeq);
+	url = '/standardProduct/' + standardProductSeq + '?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + cooperationSortOrder;
 	ajaxCooperationProducts(url);
 }
 
@@ -366,3 +371,6 @@ function checkLinked() {
 function checkUnlinked() {
 	$('input[type=checkbox][name="linkedProduct"]').prop('checked', false);
 }
+
+
+

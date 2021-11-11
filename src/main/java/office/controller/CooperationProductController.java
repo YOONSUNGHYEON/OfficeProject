@@ -33,7 +33,7 @@ public class CooperationProductController {
 	 */
 	@GetMapping("/cooperationProducts/unlink")
 	public CooperationProductListResponse findUnlinkProductByCategory(SearchRequest searchRequest) {
-		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findUnlinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
+		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findUnlinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getPage(), searchRequest.getSortOrder());
 		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
 		return cooperationProductListResponse;
 	}
@@ -46,7 +46,7 @@ public class CooperationProductController {
 	 */
 	@GetMapping("/cooperationProducts/link")
 	public CooperationProductListResponse findLinkProductByCategory(SearchRequest searchRequest) {
-		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findLinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder());
+		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findLinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getPage(), searchRequest.getSortOrder());
 		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
 		return cooperationProductListResponse;
 	}
@@ -60,13 +60,20 @@ public class CooperationProductController {
 	@PostMapping("/cooperationProducts/link")
 	public ResultResponse link(@RequestBody CooperationProductListLinkReqeust linkReqeust) {
 		log.info(linkReqeust.getCooperationProductID()[0].getCooperationCompanySeq() + "");
+		ResultResponse response = null;
 		for (int i = 0; i < linkReqeust.getCooperationProductID().length; i++) {
 			String cooperationProductSeq = linkReqeust.getCooperationProductID()[i].getCooperationProductSeq();
 			String cooperationCompanySeq = linkReqeust.getCooperationProductID()[i].getCooperationCompanySeq();
 			CooperationProductResponse cooperationProductResponse = cooperationProductService.link(linkReqeust.getStandardProductSeq(), cooperationProductSeq, cooperationCompanySeq);
-			standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq());
+			if(cooperationProductResponse == null) {
+				response = new ResultResponse(400, "링크 생성 실패");
+				break;
+			} else {
+				standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq());
+				response = new ResultResponse(200, "링크 생성 성공");
+			}
 		}
-		return new ResultResponse(200, "링크 생성 성공");
+		return response;
 	}
 
 	/**
@@ -78,14 +85,22 @@ public class CooperationProductController {
 	@PostMapping("/cooperationProducts/unlink")
 	public ResultResponse unlink(@RequestBody CooperationProductListLinkReqeust linkReqeust) {
 		log.info(linkReqeust.getCooperationProductID()[0].getCooperationCompanySeq() + "");
+		ResultResponse response = null;
 		for (int i = 0; i < linkReqeust.getCooperationProductID().length; i++) {
 			String cooperationProductSeq = linkReqeust.getCooperationProductID()[i].getCooperationProductSeq();
 			String cooperationCompanySeq = linkReqeust.getCooperationProductID()[i].getCooperationCompanySeq();
 			CooperationProductResponse cooperationProductResponse = cooperationProductService.unlink(linkReqeust.getStandardProductSeq(), cooperationProductSeq, cooperationCompanySeq);
 			standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq());
+			if(cooperationProductResponse == null) {
+				response = new ResultResponse(400, "링크 해제하기 실패");
+				break;
+			} else {
+				standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq());
+				response = new ResultResponse(200, "링크 해제하기 성공");
+			}
 		}
 
-		return new ResultResponse(200, "링크 해제 성공");
+		return response;
 
 	}
 }

@@ -52,7 +52,7 @@ public class CooperationProductService {
 		ArrayList<String> list = makeList(multiSortOrderStr);
 		Map<Integer, String> orderEnumMap = OrderEnum.makeMap();
 		Map<Integer, String> sortEnumMap = CooperationProductSortEnum.makeMap();
-
+		log.info(multiSortOrderStr);
 		Sort sort = null;
 
 		for (int i = 0; i < list.size(); i++) {
@@ -60,9 +60,9 @@ public class CooperationProductService {
 			int sortCode = Integer.parseInt(sortOrderArr[0]);
 			int orderCode = Integer.parseInt(sortOrderArr[1]);
 			if (i == 0) {
-				sort = orderEnumMap.get(orderCode) == OrderEnum.ASC.getName() ? Sort.by(sortEnumMap.get(sortCode)).ascending() : Sort.by(sortEnumMap.get(sortCode)).descending();
+				sort = orderEnumMap.get(orderCode) == OrderEnum.DESC.getName() ? Sort.by(sortEnumMap.get(sortCode)).ascending() : Sort.by(sortEnumMap.get(sortCode)).descending();
 			} else {
-				sort = orderEnumMap.get(orderCode) == OrderEnum.ASC.getName() ? sort.and(Sort.by(sortEnumMap.get(sortCode)).ascending()) : sort.and(Sort.by(sortEnumMap.get(sortCode)).descending());
+				sort = orderEnumMap.get(orderCode) == OrderEnum.DESC.getName() ? sort.and(Sort.by(sortEnumMap.get(sortCode)).ascending()) : sort.and(Sort.by(sortEnumMap.get(sortCode)).descending());
 			}
 		}
 		return sort;
@@ -76,8 +76,8 @@ public class CooperationProductService {
 	 *                          5:1,1:2,3:2
 	 * @return Page
 	 */
-	public Page<CooperationProductResponse> findLinkProductByCategory(int categorySeq, String multiSortOrderStr) {
-		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findAllByCategorySeqAndStandardProductSeqNotNull(categorySeq, PageRequest.of(0, 20, getSort(multiSortOrderStr)));
+	public Page<CooperationProductResponse> findLinkProductByCategory(int categorySeq, int page, String multiSortOrderStr) {
+		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findAllByCategorySeqAndStandardProductSeqNotNull(categorySeq, PageRequest.of(page, 20, getSort(multiSortOrderStr)));
 		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductPage.map(cooperationProduct -> cooperationProduct.toDTO());
 		return cooperationProductResponse;
 	}
@@ -89,8 +89,8 @@ public class CooperationProductService {
 	 *                          5:1,1:2,3:2
 	 * @return Page
 	 */
-	public Page<CooperationProductResponse> findUnlinkProductByCategory(long categorySeq, String multiSortOrderStr) {
-		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findAllByCategorySeqAndStandardProductSeq(categorySeq, null, PageRequest.of(0, 20, getSort(multiSortOrderStr)));
+	public Page<CooperationProductResponse> findUnlinkProductByCategory(long categorySeq,int page, String multiSortOrderStr) {
+		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findAllByCategorySeqAndStandardProductSeq(categorySeq, null, PageRequest.of(page, 20, getSort(multiSortOrderStr)));
 		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductPage.map(cooperationProduct -> cooperationProduct.toDTO());
 		return cooperationProductResponse;
 
@@ -120,6 +120,9 @@ public class CooperationProductService {
 	 */
 	public CooperationProductResponse link(String standardProductSeq, String cooperationProductSeq, String cooperationCompanySeq) {
 		CooperationProduct cooperationProduct = cooperationProductRepository.findByCooperationProductSeqAndCooperationCompanySeq(cooperationProductSeq, cooperationCompanySeq);
+		if(cooperationProduct.getStandardProduct()!=null) {
+			return null;
+		}
 		StandardProduct standardProduct = StandardProduct.builder().seq(standardProductSeq).build();
 		CooperationProductResponse cooperationProductResponse = cooperationProductRepository.save(cooperationProduct.updateStandardProduct(standardProduct)).toDTO();
 		return cooperationProductResponse;
@@ -135,6 +138,10 @@ public class CooperationProductService {
 	 */
 	public CooperationProductResponse unlink(String standardProductSeq, String cooperationProductSeq, String cooperationCompanySeq) {
 		CooperationProduct cooperationProduct = cooperationProductRepository.findByCooperationProductSeqAndCooperationCompanySeq(cooperationProductSeq, cooperationCompanySeq);
+		if(cooperationProduct.getStandardProduct()==null || !cooperationProduct.getStandardProduct().getSeq().equals(standardProductSeq) ) {
+			log.info(cooperationProduct.getStandardProduct().getSeq() + ":" + standardProductSeq);
+			return null;
+		}
 		CooperationProductResponse cooperationProductResponse = cooperationProductRepository.save(cooperationProduct.updateStandardProduct(null)).toDTO();
 		return cooperationProductResponse;
 	}

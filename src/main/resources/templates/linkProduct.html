@@ -41,7 +41,7 @@
 				</tr>
 
 				<tr>
-					<th>카테고리</th>
+					<th class='shortInput'>카테고리</th>
 					<td>
 						<div>
 							<select class='shortInput' name='categorySelect' id='categorySelect'>
@@ -59,7 +59,7 @@
 					<span class='btn'>기준 상품</span>
 					<button class='btn' onclick='download(1);' type='button'>엑셀 다운로드</button>
 
-					<div style='overflow: auto; height: 650px;' >
+					<div style='overflow: auto; height: 770px;' >
 						<table border='1' id='standardProductTable'>
 							<thead id='standardProductThead'>
 								<tr >
@@ -83,7 +83,7 @@
 				<div class='layout-right'>
 					<span class='btn'>협력사 상품</span>
 					<button class='btn' onclick='download(2);' type='button'>엑셀 다운로드</button>
-					<div style='overflow: auto; height: 650px;'>
+					<div style='overflow: auto; height: 770px;'>
 						<table id='cooperationProductTable' border='1'>
 							<thead id='cooperationProductThead'>
 								<tr>
@@ -111,6 +111,7 @@
 		</form>
 
 	</div>
+	<script type='text/javascript' async='true' src='js/makePreview.js'></script>
 	<script type='text/javascript' async='true' src='js/selectAll.js'></script>
 	<script type='text/javascript' async='true' src='js/linkProduct.js'></script>
 </body>

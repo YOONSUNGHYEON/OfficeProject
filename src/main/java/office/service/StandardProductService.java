@@ -1,7 +1,6 @@
 package office.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -66,70 +65,14 @@ public class StandardProductService {
 			int sortCode = Integer.parseInt(sortOrderArr[0]);
 			int orderCode = Integer.parseInt(sortOrderArr[1]);
 			if (i == 0) {
-				sort = orderEnumrMap.get(orderCode) == OrderEnum.ASC.getName() ? Sort.by(sortEnumMap.get(sortCode)).ascending() : Sort.by(sortEnumMap.get(sortCode)).descending();
+				sort = orderEnumrMap.get(orderCode) == OrderEnum.DESC.getName() ? Sort.by(sortEnumMap.get(sortCode)).ascending() : Sort.by(sortEnumMap.get(sortCode)).descending();
 			} else {
-				sort = orderEnumrMap.get(orderCode) == OrderEnum.ASC.getName() ? sort.and(Sort.by(sortEnumMap.get(sortCode)).ascending()) : sort.and(Sort.by(sortEnumMap.get(sortCode)).descending());
+				sort = orderEnumrMap.get(orderCode) == OrderEnum.DESC.getName() ? sort.and(Sort.by(sortEnumMap.get(sortCode)).ascending()) : sort.and(Sort.by(sortEnumMap.get(sortCode)).descending());
 			}
 		}
 		return sort;
 	}
 
-
-	/**
-	 * 선택된 다중 정렬 문자열을 받아서 배열로 변환 </br>
-	 * ex) 1:2,2:1 -> arr = {2, 1}
-	 *
-	 * @param sortPriorityStr
-	 * @return int[] sortArr
-	 */
-	public Sort makeSortArr(String sortPriorityStr) {
-		ArrayList<String> list = new ArrayList<String>();
-
-		String[] sortPriorityList = sortPriorityStr.split(",");
-		int[] sortArr = new int[7];
-		for (String sortOrder : sortPriorityList) {
-			String[] sortOrderList = sortOrder.split(":");
-			sortArr[Integer.parseInt(sortOrderList[0])] = Integer.parseInt(sortOrderList[1]);
-		}
-		for (String sortOrder : sortPriorityList) {
-			list.add(sortOrder);
-		}
-		list.sort(null);
-
-		Map<Integer, String> sortMap = new HashMap<Integer, String>();
-		Map<Integer, String> orderMap = new HashMap<Integer, String>();
-
-		for (StandardProductSortEnum sort : StandardProductSortEnum.values()) {
-			sortMap.put(sort.getCode(), sort.getName());
-		}
-		for (OrderEnum order : OrderEnum.values()) {
-			orderMap.put(order.getCode(), order.getName());
-		}
-		Sort sort = null;
-		for (int i = 0; i < list.size(); i++) {
-			String[] sortOrderArr = list.get(i).split(":");
-			int sortCode = Integer.parseInt(sortOrderArr[0]);
-			int orderCode = Integer.parseInt(sortOrderArr[1]);
-			if (i == 0) {
-				sort = orderMap.get(orderCode) == OrderEnum.ASC.getName() ? Sort.by(sortMap.get(sortCode)).ascending() : Sort.by(sortMap.get(sortCode)).descending();
-			} else {
-				sort = orderMap.get(orderCode) == OrderEnum.ASC.getName() ? sort.and(Sort.by(sortMap.get(sortCode)).ascending()) : sort.and(Sort.by(sortMap.get(sortCode)).descending());
-			}
-		}
-		log.info(sort + "");
-		return sort;
-	}
-
-	/**
-	 * 다중 정렬 배열을 받아 정렬 우선순위에 맞춰 Sort 클래스 생성
-	 *
-	 * @param int[]
-	 * @return Sort
-	 */
-	public Sort getSort(int[] sortArr) {
-		Sort sort = null;
-		return sort;
-	}
 
 	/**
 	 * 링크 안된 상품 목록 카테고리 별로 조회하기
@@ -141,7 +84,7 @@ public class StandardProductService {
 	 */
 	public Page<StandardProductResponse> findUnLinkProductByCategory(long categorySeq, String sortPriorityStr, int page) {
 
-		Pageable firstPageWithTwoElements = PageRequest.of(page, 20, makeSortArr(sortPriorityStr));
+		Pageable firstPageWithTwoElements = PageRequest.of(page, 20, getSort(sortPriorityStr));
 		Page<StandardProduct> allStandardProducts = standardProductRepository.findAllByCategorySeqAndLowestPrice(categorySeq, 0, firstPageWithTwoElements);
 		Page<StandardProductResponse> standardProductPageResponse = allStandardProducts.map(standardProduct -> standardProduct.toDTO());
 		return standardProductPageResponse;
@@ -157,7 +100,7 @@ public class StandardProductService {
 	 * @return StandardProductResponse
 	 */
 	public Page<StandardProductResponse> findLinkProductByCategory(long categorySeq, String sortPriorityStr, int page) {
-		Pageable firstPageWithTwoElements = PageRequest.of(page, 20, makeSortArr(sortPriorityStr));
+		Pageable firstPageWithTwoElements = PageRequest.of(page, 20, getSort(sortPriorityStr));
 		Page<StandardProduct> allStandardProducts = standardProductRepository.findAllByCategorySeqAndCooperationCompanyCountGreaterThan(categorySeq, 0, firstPageWithTwoElements);
 		Page<StandardProductResponse> standardProductPageResponse = allStandardProducts.map(standardProduct -> standardProduct.toDTO());
 		return standardProductPageResponse;

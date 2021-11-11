@@ -8,10 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ResultResponse {
-
-	//응답 코드
     private int code;
-
-    //응답 메세지
     private String msg;
 }

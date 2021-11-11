@@ -1,7 +1,8 @@
 package office.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,8 +38,9 @@ public class CooperationProduct implements Serializable{
 	private String cooperationProductSeq;
 
 	@Id
-	@Column(name="sCooperationCompanySeq", updatable=false)
-	private String cooperationCompanySeq;
+	@ManyToOne
+	@JoinColumn(name="sCooperationCompanySeq", updatable=false)
+	private CooperationCompany cooperationCompany;
 
 	@ManyToOne
     @JoinColumn(name="sStandardProductSeq")
@@ -60,16 +62,17 @@ public class CooperationProduct implements Serializable{
 	@Column(name = "nMobilePrice")
 	private int mobilePrice;
 
-	@Column(name = "sImageURL", nullable = false)
+	@Column(name = "sImageURL")
 	private String imageURL;
 
     @CreatedDate
 	@Column(name = "dtInputDate", nullable = false)
-	private LocalDateTime inputDate;
+	private Date inputDate;
 
     public CooperationProductResponse toDTO() {
     	return CooperationProductResponse.builder()
-    			.cooperationCompanySeq(cooperationCompanySeq)
+    			.cooperationCompanySeq(cooperationCompany.getSeq())
+    			.cooperationCompanyName(cooperationCompany.getName())
     			.cooperationProductSeq(cooperationProductSeq)
     			.categoryName(category.getName())
     			.standardProduct(standardProduct)
@@ -78,7 +81,7 @@ public class CooperationProduct implements Serializable{
     			.URL(URL)
     			.price(price)
     			.mobilePrice(mobilePrice)
-    			.inputDate(inputDate)
+    			.inputDate(inputDateFormat(inputDate))
     			.build();
     }
 
@@ -86,6 +89,11 @@ public class CooperationProduct implements Serializable{
     	this.standardProduct = standardProduct;
     	return this;
     }
+
+    public String inputDateFormat(Date inputDate) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd"); //원하는 데이터 포맷 지정
+		return simpleDateFormat.format(inputDate);
+	}
 
 
 }

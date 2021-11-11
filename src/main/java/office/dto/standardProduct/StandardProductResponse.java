@@ -24,7 +24,4 @@ public class StandardProductResponse {
 	private int averagePrice;
 	private int cooperationCompanyCount;
 	private int combinedLowestPrice;
-
-
-
 }

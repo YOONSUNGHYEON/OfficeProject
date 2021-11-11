@@ -31,22 +31,22 @@ public class StandardProduct {
 	private String seq;
 
 	@ManyToOne
-	@JoinColumn(name = "nCategorySeq")
+	@JoinColumn(name = "nCategorySeq", updatable = false)
 	private Category category;
 
 	@Column(name = "sName", nullable = false)
 	private String name;
 
-	@Column(name = "sImageSource", nullable = false)
+	@Column(name = "sImageSource")
 	private String imageSource;
 
 	@Column(name = "sImageSourceURL")
 	private String imageSourceURL;
 
-	@Column(name = "sImageURL", nullable = false)
+	@Column(name = "sImageURL")
 	private String imageURL;
 
-	@Column(name = "dtManufactureDate", nullable = false)
+	@Column(name = "dtManufactureDate")
 	private String manufactureDate;
 
 	@Column(name = "sDescription")
