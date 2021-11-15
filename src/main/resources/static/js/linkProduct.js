@@ -155,8 +155,8 @@ function makeStandardProductThead(currentPage, sortOrderArr) {
 
 /* 기준 상품 Table > Tbody 에 들어갈 html 만들기 */
 function makeStandardProductTbody(standardProducts) {
-	let editUrl = 'http://192.168.56.106/DanawaOfficeProject/createStandardProduct.html?seq=';
-	let blogUrl = 'http://192.168.56.106/DanawaOfficeProject/blog.html?standardProductSeq=';
+	let editUrl = 'http://192.168.56.102/DanawaOfficeProject/createStandardProduct.html?seq=';
+	let blogUrl = 'http://192.168.56.102/DanawaOfficeProject/blog.html?standardProductSeq=';
 	let standardProductTable = "";
 	$.each(standardProducts, function(index, standardProduct) {
 		standardProductTable += '<tr style="cursor:pointer;" onclick="clickStandardProduct(\'' + standardProduct['seq'] + '\');" >';
@@ -264,11 +264,12 @@ function makeCooperationProductThead(currentPage, sortOrderArr) {
 function makeCooperationProductTbody(cooperationProducts) {
 	let cooperationProductTable = "";
 	$.each(cooperationProducts, function(index, cooperationProduct) {
+		let editUrl = 'http://192.168.56.102/DanawaOfficeProject/createCooperationProduct.html?cooperationProductSeq=' + cooperationProduct['cooperationProductSeq'] + '&cooperationCompanySeq=' + cooperationProduct["cooperationCompanySeq"];
 		cooperationProductTable += '<tr style="cursor:pointer;">';
 		cooperationProductTable += '<td><input type="checkbox" name="cooperationProductSeq" onclick="checkSelectAll(this)" value="' + cooperationProduct['cooperationProductSeq'] + '"></td>';
 		cooperationProductTable += '<td> <input type="hidden" id="cooperationCompanySeq" name="cooperationCompanySeq" value="' + cooperationProduct["cooperationCompanySeq"] + '">' + cooperationProduct["cooperationCompanyName"] + '</td>';
 		cooperationProductTable += '<td>' + cooperationProduct['categoryName'] + '</td>';
-		cooperationProductTable += '<td title="' + cooperationProduct['name'] + '" class="productName" ><p>' + cooperationProduct['name'] + '</p></td>';
+		cooperationProductTable += '<td title="' + cooperationProduct['name'] + '" class="productName" ><a href="' + editUrl + '"><p>' + cooperationProduct['name'] + '</p></a></td>';
 		cooperationProductTable += '<td><a target="_blank" href="' + cooperationProduct['name'] + '">ⓘ</td>'
 		cooperationProductTable += '<td><a target="_blank" href="' + cooperationProduct['url'] + '">ⓤ</a></td>';
 		cooperationProductTable += '<td>' + cooperationProduct['price'] + '</td>';
