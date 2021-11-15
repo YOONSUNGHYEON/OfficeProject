@@ -71,6 +71,11 @@ table#standardProductTable th, table#cooperationProductTable th {
 table th a.activeThead {
 	color: #5dbce9;
 }
+.previewImg{
+	position: absolute;
+	width: 80px;
+	height: 80px;	
+}
 
 table th a {
 	color: white;

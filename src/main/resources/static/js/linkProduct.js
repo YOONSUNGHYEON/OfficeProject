@@ -51,7 +51,7 @@ function link() {
 				alert("링크를 생성했습니다.");
 				getStandardProducts(6, 2, 0);
 				getCooperationProducts(3, 2, 0);
-			} else if(response['code'] == 400){
+			} else if (response['code'] == 400) {
 				alert("이미 링크가 되어 있는 상품 입니다.");
 			}
 
@@ -77,7 +77,7 @@ function unLink() {
 				alert("링크를 해제했습니다.");
 				getStandardProducts(6, 2, 0);
 				getCooperationProducts(3, 2, 0);
-			} else if(response['code'] == 400){
+			} else if (response['code'] == 400) {
 				alert("이미 링크가 해제 되어 있는 상품입니다.");
 			}
 
@@ -156,13 +156,13 @@ function makeStandardProductThead(currentPage, sortOrderArr) {
 /* 기준 상품 Table > Tbody 에 들어갈 html 만들기 */
 function makeStandardProductTbody(standardProducts) {
 	let editUrl = 'http://192.168.56.106/DanawaOfficeProject/createStandardProduct.html?seq=';
-	let blogUrl = 'http://192.168.56.106/DanawaOfficeProject/blog.html?seq=';
+	let blogUrl = 'http://192.168.56.106/DanawaOfficeProject/blog.html?standardProductSeq=';
 	let standardProductTable = "";
 	$.each(standardProducts, function(index, standardProduct) {
 		standardProductTable += '<tr style="cursor:pointer;" onclick="clickStandardProduct(\'' + standardProduct['seq'] + '\');" >';
 		standardProductTable += '<td>' + standardProduct['categoryName'] + '</td>';
 		standardProductTable += '<td onclick="event.cancelBubble=true"> <a href="' + editUrl + standardProduct['seq'] + '"><p>' + standardProduct['name'] + '</p></a></td>';
-		standardProductTable += '<td class="preImg" onclick="event.cancelBubble=true"><input name="imageURL" type="hidden" value="'+ standardProduct['imageURL'] +'">ⓘ</td>';
+		standardProductTable += '<td class="preImg" onclick="event.cancelBubble=true"><input name="imageURL" type="hidden" value="' + standardProduct['imageURL'] + '"><a >ⓘ</a></td>';
 		standardProductTable += '<td onclick="event.cancelBubble=true"><a href="' + blogUrl + standardProduct['seq'] + '">ⓤ</a></td>';
 		standardProductTable += '<td>' + standardProduct['combinedLowestPrice'] + '</td>';
 		standardProductTable += '<td>' + standardProduct['lowestPrice'] + '</td>';
@@ -174,6 +174,20 @@ function makeStandardProductTbody(standardProducts) {
 	});
 	$("#standardProductTbody").html(standardProductTable);
 }
+
+function fff() {
+	$.ajax({
+		type: 'GET',
+		url: "/standardProduct/image/dkfjf444",
+		success: function(response) {
+
+			
+
+		$("#image").attr("src", "data:image/png;base64," + response);
+		}
+	});
+}
+
 function ajaxStandardProducts(url) {
 	$.ajax({
 		type: 'GET',
@@ -253,7 +267,7 @@ function makeCooperationProductTbody(cooperationProducts) {
 		cooperationProductTable += '<tr style="cursor:pointer;">';
 		cooperationProductTable += '<td><input type="checkbox" name="cooperationProductSeq" onclick="checkSelectAll(this)" value="' + cooperationProduct['cooperationProductSeq'] + '"></td>';
 		cooperationProductTable += '<td> <input type="hidden" id="cooperationCompanySeq" name="cooperationCompanySeq" value="' + cooperationProduct["cooperationCompanySeq"] + '">' + cooperationProduct["cooperationCompanyName"] + '</td>';
-		cooperationProductTable += '<td>' + cooperationProduct['categoryName']+ '</td>';
+		cooperationProductTable += '<td>' + cooperationProduct['categoryName'] + '</td>';
 		cooperationProductTable += '<td title="' + cooperationProduct['name'] + '" class="productName" ><p>' + cooperationProduct['name'] + '</p></td>';
 		cooperationProductTable += '<td><a target="_blank" href="' + cooperationProduct['name'] + '">ⓘ</td>'
 		cooperationProductTable += '<td><a target="_blank" href="' + cooperationProduct['url'] + '">ⓤ</a></td>';
@@ -291,15 +305,15 @@ function makePagination(paginationResponse, option) {
 	const prevArrow = (Math.floor(currentPage / blockPage) + 1) * 10; // 다음 페이지 묶음 시작 페이지
 	const totalLastPage = Math.floor(paginationResponse['totalPages'] / blockPage) * 10; // 전체 마지막 페이지 묶음 시작 페이지
 	let pagination = "";
-	if(option =="standardProduct") {
-		option  = "getStandardProducts(6, 2,";
-	}else {
-		option  = "getCooperationProducts(3, 2,";
+	if (option == "standardProduct") {
+		option = "getStandardProducts(6, 2,";
+	} else {
+		option = "getCooperationProducts(3, 2,";
 	}
-	
+
 	if (startPage != 0) {
-		pagination += '<a class="arrow" onClick="'+ option +' 0)" href="#a"><<</a>';
-		pagination += '<a class="arrow" onClick=" '+ option + nextArrow + ')" href="javascript:void(0);">&lt;</a>';
+		pagination += '<a class="arrow" onClick="' + option + ' 0)" href="#a"><<</a>';
+		pagination += '<a class="arrow" onClick=" ' + option + nextArrow + ')" href="javascript:void(0);">&lt;</a>';
 	}
 	for (let i = startPage; i < startPage + blockPage; i++) {
 		let pageNumber = i + 1;
@@ -313,7 +327,7 @@ function makePagination(paginationResponse, option) {
 		}
 	}
 	if (totalLastPage != startPage) {
-		pagination += '<a class="arrow" onClick="'+ option + prevArrow + ')" href="#a">></a>';
+		pagination += '<a class="arrow" onClick="' + option + prevArrow + ')" href="#a">></a>';
 		pagination += '<a class="arrow" onClick="' + option + (paginationResponse['totalPages'] - 1) + ')" href="javascript:void(0);">>></a>';
 	}
 	return pagination;
