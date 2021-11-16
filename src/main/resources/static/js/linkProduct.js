@@ -102,14 +102,19 @@ function getCheckboxValue() {
 
 /* 검색 버튼 클릭 */
 function searchProduct(sortSeq, orderSeq, page) {
-	getStandardProducts(6, 2, 0);
-	getCooperationProducts(3, 2, 0);
+	if (document.getElementById('categorySelect').value == -1) {
+		alert("카테고리를 선택해 주세요.");
+	} else {
+		getStandardProducts(6, 2, 0);
+		getCooperationProducts(3, 2, 0);
+	}
 }
+
 let standardSortOrder = "";
 let cooperationSortOrder = "";
 function getStandardProducts(sortSeq, orderSeq, page) {
-	let categorySeq = document.getElementById('categorySelect').value;
-	let linkOption = document.querySelector('input[name="link"]:checked').value;
+	const categorySeq = document.getElementById('categorySelect').value;
+	const linkOption = document.querySelector('input[name="link"]:checked').value;
 	let url = '';
 	if (sortSeq + ':' + orderSeq == "6:2" || standardSortOrder == "6:2") {
 		standardSortOrder = sortSeq + ":" + orderSeq;
@@ -122,6 +127,8 @@ function getStandardProducts(sortSeq, orderSeq, page) {
 		url = '/standardProducts/link?&page=' + page + '&categorySeq=' + categorySeq + '&sortOrder=' + standardSortOrder;
 	}
 	ajaxStandardProducts(url);
+
+
 }
 
 /* 기준 상품 Table > Thead 에 들어갈 html 만들기 */
@@ -155,8 +162,8 @@ function makeStandardProductThead(currentPage, sortOrderArr) {
 
 /* 기준 상품 Table > Tbody 에 들어갈 html 만들기 */
 function makeStandardProductTbody(standardProducts) {
-	let editUrl = 'http://192.168.56.102/DanawaOfficeProject/createStandardProduct.html?seq=';
-	let blogUrl = 'http://192.168.56.102/DanawaOfficeProject/blog.html?standardProductSeq=';
+	let editUrl = 'http://192.168.56.106/DanawaOfficeProject/createStandardProduct.html?seq=';
+	let blogUrl = 'http://192.168.56.106/DanawaOfficeProject/blog.html?standardProductSeq=';
 	let standardProductTable = "";
 	$.each(standardProducts, function(index, standardProduct) {
 		standardProductTable += '<tr style="cursor:pointer;" onclick="clickStandardProduct(\'' + standardProduct['seq'] + '\');" >';
@@ -175,18 +182,6 @@ function makeStandardProductTbody(standardProducts) {
 	$("#standardProductTbody").html(standardProductTable);
 }
 
-function fff() {
-	$.ajax({
-		type: 'GET',
-		url: "/standardProduct/image/dkfjf444",
-		success: function(response) {
-
-			
-
-		$("#image").attr("src", "data:image/png;base64," + response);
-		}
-	});
-}
 
 function ajaxStandardProducts(url) {
 	$.ajax({
@@ -264,7 +259,7 @@ function makeCooperationProductThead(currentPage, sortOrderArr) {
 function makeCooperationProductTbody(cooperationProducts) {
 	let cooperationProductTable = "";
 	$.each(cooperationProducts, function(index, cooperationProduct) {
-		let editUrl = 'http://192.168.56.102/DanawaOfficeProject/createCooperationProduct.html?cooperationProductSeq=' + cooperationProduct['cooperationProductSeq'] + '&cooperationCompanySeq=' + cooperationProduct["cooperationCompanySeq"];
+		let editUrl = 'http://192.168.56.106/DanawaOfficeProject/createCooperationProduct.html?cooperationProductSeq=' + cooperationProduct['cooperationProductSeq'] + '&cooperationCompanySeq=' + cooperationProduct["cooperationCompanySeq"];
 		cooperationProductTable += '<tr style="cursor:pointer;">';
 		cooperationProductTable += '<td><input type="checkbox" name="cooperationProductSeq" onclick="checkSelectAll(this)" value="' + cooperationProduct['cooperationProductSeq'] + '"></td>';
 		cooperationProductTable += '<td> <input type="hidden" id="cooperationCompanySeq" name="cooperationCompanySeq" value="' + cooperationProduct["cooperationCompanySeq"] + '">' + cooperationProduct["cooperationCompanyName"] + '</td>';

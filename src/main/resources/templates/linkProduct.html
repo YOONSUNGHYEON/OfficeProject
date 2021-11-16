@@ -1,51 +1,49 @@
 <!DOCTYPE html>
-<html lang='en' xmlns:th='http://www.thymeleaf.org'>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link rel='stylesheet' type='text/css' href='/css/common.css' />
-<link rel='stylesheet' type='text/css' href='/css/linkProduct.css' />
-<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
-<title>상품 링크</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="/css/common.css" />
+	<link rel="stylesheet" type="text/css" href="/css/linkProduct.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<title>상품 링크</title>
 </head>
 <body>
-	<nav id='topMenu'>
+	<nav id="topMenu">
 		<ul>
-			<li><img id='img-logo' src='image/danawalogo.gif' alt='다나와 로고'></li>
-			<li><a class='menuLink ' href='http://192.168.56.106/DanawaOfficeProject/createStandardProduct.html'>기준상품등록</a></li>
-			<li><a class='menuLink' href='http://192.168.56.106/DanawaOfficeProject/createCooperationProduct.html'>협력사상품등록</a></li>
-			<li><a class='menuLink active' href='http://localhost:9090/link'>상품링크</a></li>
-			<li><a class='menuLink' href='http://192.168.56.106/DanawaOfficeProject/productParsing.html'>상품정보 파싱</a></li>
-			<li><a class='menuLink' href='/excel'>엑셀파일등록</a></li>
+			<li><img id="img-logo" src="image/danawalogo.gif" alt="다나와 로고"></li>
+			<li><a class="menuLink " href="http://192.168.56.106/DanawaOfficeProject/createStandardProduct.html">기준상품등록</a></li>
+			<li><a class="menuLink" href="http://192.168.56.106/DanawaOfficeProject/createCooperationProduct.html">협력사상품등록</a></li>
+			<li><a class="menuLink active" href="http://localhost:9090/link">상품링크</a></li>
+			<li><a class="menuLink" href="http://192.168.56.106/DanawaOfficeProject/productParsing.html">상품정보 파싱</a></li>
+			<li><a class="menuLink" href="http://192.168.56.106/DanawaOfficeProject/uploadExcel.html">엑셀파일등록</a></li>
 		</ul>
 	</nav>
-	<div id='linkContent'>
+	<div id="linkContent">
 		<h3>상품 링크</h3>
-		<table id='optionTable'>
+		<table id="optionTable">
 			<tbody>
 				<tr>
-					<td colspan='2'>
+					<td colspan="2">
 						<label>
-							<input type='radio' name='link' value='0'>
+							<input type="radio" name="link" value='0' checked="checked">
 							<span class='blueText'> 링크된상품 </span>
 						</label>
 						<label>
-							<input type='radio' name='link' value='1' onClick="checkUnlinked()">
+							<input type='radio' name='link' value='1' onclick="checkUnlinked()">
 							<span class='blueText'> 링크안된상품 </span>
 						</label>
 						<label>
-							<input type='checkbox' name='linkedProduct' id='linkedProductCheckBox' onClick="checkLinked()"  value='2'>
+							<input type='checkbox' name='linkedProduct' id='linkedProductCheckBox' onclick="checkLinked()"  value='2'>
 							링크상품보기
 						</label>
-
 					</td>
 				</tr>
-
 				<tr>
 					<th class='shortInput'>카테고리</th>
 					<td>
 						<div>
 							<select class='shortInput' name='categorySelect' id='categorySelect'>
-								<option value='none'>카테고리</option>
+								<option value='-1'>카테고리</option>
 							</select>
 							<button class='btn whiteBtn radiusBtn' onClick='searchProduct();' type='button'>검색</button>
 						</div>
@@ -82,7 +80,7 @@
 				</div>
 				<div class='layout-right'>
 					<span class='btn'>협력사 상품</span>
-					<button class='btn' onclick='download(2);' type='button'>엑셀 다운로드</button>
+					<button class="btn" onclick='download(2);' type='button'>엑셀 다운로드</button>
 					<div style='overflow: auto; height: 770px;'>
 						<table id='cooperationProductTable' border='1'>
 							<thead id='cooperationProductThead'>
@@ -110,8 +108,8 @@
 			</div>
 		</form>
 	</div>
-	<script type='text/javascript' async='true' src='js/makePreview.js'></script>
-	<script type='text/javascript' async='true' src='js/selectAll.js'></script>
-	<script type='text/javascript' async='true' src='js/linkProduct.js'></script>
+	<script type='text/javascript' async src='js/makePreview.js'></script>
+	<script type='text/javascript' async src='js/selectAll.js'></script>
+	<script type='text/javascript' async src='js/linkProduct.js'></script>
 </body>
 </html>

@@ -28,6 +28,7 @@ public class StandardProductService {
 
 	private final StandardProductRepository standardProductRepository;
 	private final CooperationProductRepository cooperationProductRepository;
+
 	/**
 	 * 다중 정렬 묶음을 ','을 기준으로 나눈 후 list에 저장한다. 그 후 우선 순위 순으로 list를 정렬한다.
 	 *
@@ -72,7 +73,6 @@ public class StandardProductService {
 		}
 		return sort;
 	}
-
 
 	/**
 	 * 링크 안된 상품 목록 카테고리 별로 조회하기
@@ -126,30 +126,27 @@ public class StandardProductService {
 	public void findLowestPrice(String standardProductSeq) {
 		StandardProduct standardProduct = standardProductRepository.findBySeq(standardProductSeq);
 		ArrayList<CooperationProduct> cooperationProductList = cooperationProductRepository.findByStandardProductSeq(standardProductSeq);
-		int minPrice = standardProduct.getLowestPrice();
-		int minMobilePrice = standardProduct.getMobileLowestPrice();
+		int minPrice = 0;
+		int minMobilePrice = 0;
 		int averagePrice = 0;
-		for (CooperationProduct cooperationProduct : cooperationProductList) {
-			averagePrice += cooperationProduct.getPrice();
-			if (standardProduct.getCooperationCompanyCount() == 0) {
-				minPrice = cooperationProduct.getPrice();
-				minMobilePrice = cooperationProduct.getMobilePrice();
-			} else if (minPrice > cooperationProduct.getPrice()) {
-				minPrice = cooperationProduct.getPrice();
-			} else if (minMobilePrice > cooperationProduct.getMobilePrice()) {
-				minMobilePrice = cooperationProduct.getMobilePrice();
+		for (int i = 0; i < cooperationProductList.size(); i++) {
+			averagePrice += cooperationProductList.get(i).getPrice();
+			if (i == 0) {
+				minPrice = cooperationProductList.get(0).getPrice();
+				minMobilePrice = cooperationProductList.get(0).getMobilePrice();
+			} else {
+				if (minPrice > cooperationProductList.get(i).getPrice()) {
+					minPrice = cooperationProductList.get(i).getPrice();
+				} else if (minMobilePrice > cooperationProductList.get(i).getMobilePrice()) {
+					minMobilePrice = cooperationProductList.get(i).getMobilePrice();
+				}
 			}
-		}
-		if (cooperationProductList.size() == 0) {
-			minPrice = 0;
-			minMobilePrice = 0;
 		}
 		try {
 			averagePrice = averagePrice / cooperationProductList.size();
 		} catch (ArithmeticException e) {
 			averagePrice = 0;
 		}
-
 		StandardProduct newStandardProduct = standardProduct.updatePrice(StandardProduct.builder().cooperationCompanyCount(cooperationProductList.size()).lowestPrice(minPrice).mobileLowestPrice(minMobilePrice).averagePrice(averagePrice).combinedLowestPrice(minPrice < minMobilePrice ? minPrice : minMobilePrice).build());
 		standardProductRepository.save(newStandardProduct);
 	}

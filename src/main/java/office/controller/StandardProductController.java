@@ -1,11 +1,5 @@
 package office.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -36,11 +30,15 @@ public class StandardProductController {
 	 * @param searchRequest
 	 * @return
 	 */
-
 	@GetMapping(value = "/standardProducts")
 	public StandardProductListResponse findUnLinkProductByCategory(SearchRequest searchRequest) {
 		Page<StandardProductResponse> standardProductDTOs = standardProductService.findUnLinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getSortOrder(), searchRequest.getPage());
-		StandardProductListResponse standardProductListResponse = new StandardProductListResponse(searchRequest.getSortOrder(), standardProductDTOs, 200, "조회 성공했습니다.");
+		StandardProductListResponse standardProductListResponse;
+		if(standardProductDTOs.getContent()!=null) {
+			standardProductListResponse = new StandardProductListResponse(searchRequest.getSortOrder(), standardProductDTOs, 200, "조회 성공했습니다.");
+		} else {
+			standardProductListResponse = new StandardProductListResponse(searchRequest.getSortOrder(), standardProductDTOs, 400, "조회 실패했습니다.");
+		}
 		return standardProductListResponse;
 
 	}
@@ -71,51 +69,5 @@ public class StandardProductController {
 		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
 		return cooperationProductListResponse;
 
-	}
-
-	@GetMapping(value = "/standardProduct/image/{standardProductSeq}")
-
-	public byte[] getProductImage(HttpServletResponse response) throws IOException {
-		String strUrl = "http://192.168.56.106/DanawaOfficeProject/image/" + "I20211107151322.jpg";
-		InputStream inputStream = null;
-		 byte[] data = new byte[0];
-		inputStream = new URL(strUrl).openStream();
-		data = inputStream.readAllBytes();
-		return data;
-		/*InputStream inputStream = null;
-		ServletOutputStream outputStream = null;
-
-		try {
-			inputStream = new URL(strUrl).openStream();
-			outputStream = response.getOutputStream();
-
-			int length;
-			byte[] buffer = new byte[12288]; // 12K
-			while ((length = inputStream.read(buffer)) != -1) {
-				outputStream.write(buffer, 0, length);
-			}
-
-			outputStream.flush();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		} finally {
-			try {
-				//if (outputStream != null) {
-					//outputStream.close();
-				//}
-			} catch (NullPointerException e) {
-			} catch (Exception e) {
-			}
-
-			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			} catch (NullPointerException e) {
-			} catch (Exception e) {
-			}
-		}*/
 	}
 }
