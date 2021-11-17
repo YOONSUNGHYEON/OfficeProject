@@ -55,7 +55,7 @@
 			<div class='main-layout'>
 				<div class='layout-left'>
 					<span class='btn'>기준 상품</span>
-					<button class='btn' onclick='download(1);' type='button'>엑셀 다운로드</button>
+					<button class='btn' id="downloadStandardProduct" type='button'>엑셀 다운로드</button>
 
 					<div style='overflow: auto; height: 770px;' >
 						<table border='1' id='standardProductTable'>
@@ -80,7 +80,7 @@
 				</div>
 				<div class='layout-right'>
 					<span class='btn'>협력사 상품</span>
-					<button class="btn" onclick='download(2);' type='button'>엑셀 다운로드</button>
+					<button class="btn" id="downloadStandardProduct" type='button'>엑셀 다운로드</button>
 					<div style='overflow: auto; height: 770px;'>
 						<table id='cooperationProductTable' border='1'>
 							<thead id='cooperationProductThead'>
@@ -111,5 +111,6 @@
 	<script type='text/javascript' async src='js/makePreview.js'></script>
 	<script type='text/javascript' async src='js/selectAll.js'></script>
 	<script type='text/javascript' async src='js/linkProduct.js'></script>
+	<script type='text/javascript' async src='js/downloadExcel.js'></script>
 </body>
 </html>

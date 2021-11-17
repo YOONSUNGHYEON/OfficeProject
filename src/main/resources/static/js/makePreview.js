@@ -4,8 +4,11 @@ $(document).ready(function() {
 
 	//마우스 오버시 preview 생성
 	$(document).on("mouseover", ".preImg", function(e) {
-		let imgURL = 'http://192.168.56.106/DanawaOfficeProject/image/' + $(this).children('input[name="imageURL"]').val();
-		$("body").append("<img id='preview' src='" + imgURL + "' class='previewImg' />");
+		let imgURL = 'http://192.168.56.102/DanawaOfficeProject/image/' + $(this).children('input[name="imageURL"]').val();
+		if (!urlExists(imgURL)) {
+			imgURL = '/image/noImage.jpg';
+		}
+		$("body").append('<img id="preview" src="' + imgURL + '">');
 		$("#preview")
 			.css("top", (e.pageY - xOffset) + "px")
 			.css("left", (e.pageX + yOffset) + "px")
@@ -25,17 +28,8 @@ $(document).ready(function() {
 	});
 });
 
-/**
- * @todo 
- */
 function urlExists(url) {
-	// http://abc.com -> http:// qwe.com X (CORS), server는 가능
-	// http://abc.com -> http://abc.com(server) -> http://qwe.com
-	// http://localhost:9090/link -> http://localhost:9090/check(controller) -> http://192.168.56.106/DanawaOfficeProject/image/ 호출해서 체크
-	var http_status = "";
-	var http = new XMLHttpRequest();
-	http.open('HEAD', url, false);
-	http.send();
-	http_status = http.status;
-	return http_status;
+	$.getJSON('/image/' + url, function(existResponse) {
+		console.log(existResponse);
+	})
 }
