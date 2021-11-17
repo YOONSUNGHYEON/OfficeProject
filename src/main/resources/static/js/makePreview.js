@@ -1,14 +1,18 @@
+let ok="";
 $(document).ready(function() {
 	const xOffset = 10;
 	const yOffset = 30;
 
 	//마우스 오버시 preview 생성
 	$(document).on("mouseover", ".preImg", function(e) {
-		let imgURL = 'http://192.168.56.102/DanawaOfficeProject/image/' + $(this).children('input[name="imageURL"]').val();
-		if (!urlExists(imgURL)) {
+		let imgURL = $(this).children('input[name="imageURL"]').val();
+		urlExists(imgURL);
+		if (ok!=true) {
 			imgURL = '/image/noImage.jpg';
+		} else {
+			imgURL = 'http://192.168.56.106/DanawaOfficeProject/image/' + imgURL;
 		}
-		$("body").append('<img id="preview" src="' + imgURL + '">');
+		$("body").append('<img id="preview" src="' + imgURL + '"  class="previewImg" >');
 		$("#preview")
 			.css("top", (e.pageY - xOffset) + "px")
 			.css("left", (e.pageX + yOffset) + "px")
@@ -29,7 +33,7 @@ $(document).ready(function() {
 });
 
 function urlExists(url) {
-	$.getJSON('/image/' + url, function(existResponse) {
-		console.log(existResponse);
+	$.getJSON('/images/' + url, function(existResponse) {
+		ok = existResponse;
 	})
 }

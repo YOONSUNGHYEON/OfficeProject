@@ -17,9 +17,9 @@ public class ImageController {
 	 * @return
 	 * @throws IOException
 	 */
-	@GetMapping("/image/{imageURL}")
+	@GetMapping("/images/{imageURL}")
 	public boolean image(@PathVariable("imageURL") String imageURL) throws IOException {
-		URL url = new URL("http://192.168.56.102/DanawaOfficeProject/image/"+imageURL);
+		URL url = new URL("http://192.168.0.53/DanawaOfficeProject/image/" + imageURL);
 		URLConnection con = url.openConnection();
 		HttpURLConnection exitCode = (HttpURLConnection)con;
 		if(exitCode.getResponseCode()==200) {
