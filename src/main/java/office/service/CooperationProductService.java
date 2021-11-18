@@ -15,7 +15,6 @@ import office.dto.cooperationProduct.CooperationProductResponse;
 import office.dto.sort.CooperationProductSortEnum;
 import office.dto.sort.OrderEnum;
 import office.entity.CooperationProduct;
-import office.entity.StandardProduct;
 import office.repository.CooperationProductRepository;
 
 @Service
@@ -110,40 +109,8 @@ public class CooperationProductService {
 		return cooperationProductResponse;
 	}
 
-	/**
-	 * 협력사 상품에 기준상품 링크 하기
-	 *
-	 * @param standardProductSeq 기준상품 코드
-	 * @param cooperationProductSeq 협력사 상품 코드
-	 * @param cooperationCompanySeq 협력사 코드
-	 * @return Page
-	 */
-	public CooperationProductResponse link(String standardProductSeq, String cooperationProductSeq, String cooperationCompanySeq) {
-		CooperationProduct cooperationProduct = cooperationProductRepository.findByCooperationProductSeqAndCooperationCompanySeq(cooperationProductSeq, cooperationCompanySeq);
-		if(cooperationProduct.getStandardProduct()!=null) {
-			return null;
-		}
-		StandardProduct standardProduct = StandardProduct.builder().seq(standardProductSeq).build();
-		CooperationProductResponse cooperationProductResponse = cooperationProductRepository.save(cooperationProduct.updateStandardProduct(standardProduct)).toDTO();
-		return cooperationProductResponse;
-	}
 
-	/**
-	 *  협력사 상품에 기준상품 링크 해제 하기
-	 *
-	 * @param standardProductSeq 기준상품 코드
-	 * @param cooperationProductSeq 협력사 상품 코드
-	 * @param cooperationCompanySeq 협력사 코드
-	 * @return CooperationProductResponse
-	 */
-	public CooperationProductResponse unlink(String standardProductSeq, String cooperationProductSeq, String cooperationCompanySeq) {
-		CooperationProduct cooperationProduct = cooperationProductRepository.findByCooperationProductSeqAndCooperationCompanySeq(cooperationProductSeq, cooperationCompanySeq);
-		if(cooperationProduct.getStandardProduct()==null || !cooperationProduct.getStandardProduct().getSeq().equals(standardProductSeq) ) {
-			log.info(cooperationProduct.getStandardProduct().getSeq() + ":" + standardProductSeq);
-			return null;
-		}
-		CooperationProductResponse cooperationProductResponse = cooperationProductRepository.save(cooperationProduct.updateStandardProduct(null)).toDTO();
-		return cooperationProductResponse;
-	}
+
+
 
 }

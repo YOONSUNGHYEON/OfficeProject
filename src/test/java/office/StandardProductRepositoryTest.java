@@ -35,7 +35,6 @@ public class StandardProductRepositoryTest {
 	@BeforeEach
 	@DisplayName("기준상품 저장하기")
 	public void save() {
-
 		LocalDateTime now = LocalDateTime.now();
 		String formatedNow = now.format(DateTimeFormatter.ofPattern("yyMMddHHmmss"));
 		for(int i=0; i<10; i++) {
@@ -51,8 +50,6 @@ public class StandardProductRepositoryTest {
 					.build();
 			standardProductRepository.save(standardProduct);
 		}
-
-
 	}
 	@Test
 	@DisplayName("기준 상품 목록 조회")

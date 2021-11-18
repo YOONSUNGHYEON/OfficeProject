@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import office.dto.ResultResponse;
 import office.dto.SearchRequest;
-import office.dto.cooperationProduct.CooperationProductListLinkReqeust;
 import office.dto.cooperationProduct.CooperationProductListResponse;
 import office.dto.cooperationProduct.CooperationProductResponse;
+import office.dto.cooperationProduct.LinkListReqeust;
+import office.dto.cooperationProduct.LinkReqeust;
 import office.service.CooperationProductService;
+import office.service.LinkService;
 import office.service.StandardProductService;
 
 @RestController
@@ -24,7 +26,7 @@ public class CooperationProductController {
 	private static final Logger log = LoggerFactory.getLogger(CooperationProductController.class);
 	private final CooperationProductService cooperationProductService;
 	private final StandardProductService standardProductService;
-
+	private final LinkService linkService;
 	/**
 	 * 링크 안된 협력사 상품 목록 조회
 	 *
@@ -58,20 +60,14 @@ public class CooperationProductController {
 	 * @return
 	 */
 	@PostMapping("/cooperationProducts/link")
-	public ResultResponse link(@RequestBody CooperationProductListLinkReqeust linkReqeust) {
-		log.info(linkReqeust.getCooperationProductID()[0].getCooperationCompanySeq() + "");
+	public ResultResponse link(@RequestBody LinkListReqeust linkListReqeust) {
 		ResultResponse response = null;
-		for (int i = 0; i < linkReqeust.getCooperationProductID().length; i++) {
-			String cooperationProductSeq = linkReqeust.getCooperationProductID()[i].getCooperationProductSeq();
-			String cooperationCompanySeq = linkReqeust.getCooperationProductID()[i].getCooperationCompanySeq();
-			CooperationProductResponse cooperationProductResponse = cooperationProductService.link(linkReqeust.getStandardProductSeq(), cooperationProductSeq, cooperationCompanySeq);
-			if(cooperationProductResponse == null) {
-				response = new ResultResponse(400, "링크 생성 실패");
-				break;
-			} else {
-				standardProductService.findLowestPrice(linkReqeust.getStandardProductSeq());
-				response = new ResultResponse(200, "링크 생성 성공");
-			}
+		String standardProductSeq = linkListReqeust.getStandardProductSeq();
+		for (int i = 0; i < linkListReqeust.getCooperationProductID().length; i++) {
+			LinkReqeust linkReqeust = new  LinkReqeust(linkListReqeust.getStandardProductSeq(),
+						linkListReqeust.getCooperationProductID()[i].getCooperationProductSeq(),
+						linkListReqeust.getCooperationProductID()[i].getCooperationCompanySeq());
+			linkService.link(linkReqeust);
 		}
 		return response;
 	}
@@ -81,9 +77,9 @@ public class CooperationProductController {
 	 *
 	 * @param linkReqeust
 	 * @return
-	 */
+
 	@PostMapping("/cooperationProducts/unlink")
-	public ResultResponse unlink(@RequestBody CooperationProductListLinkReqeust linkReqeust) {
+	public ResultResponse unlink(@RequestBody LinkListReqeust linkReqeust) {
 		log.info(linkReqeust.getCooperationProductID()[0].getCooperationCompanySeq() + "");
 		ResultResponse response = null;
 		for (int i = 0; i < linkReqeust.getCooperationProductID().length; i++) {
@@ -102,5 +98,5 @@ public class CooperationProductController {
 
 		return response;
 
-	}
+	} */
 }

@@ -52,4 +52,6 @@ public interface CooperationProductRepository extends PagingAndSortingRepository
 	 */
 	Page<CooperationProduct> findAllByCategorySeqAndStandardProductSeqNotNull(long categorySeq, Pageable pageable);
 
+	CooperationProduct getOne(String cooperationProductSeq, String cooperationCompanySeq);
+
 }

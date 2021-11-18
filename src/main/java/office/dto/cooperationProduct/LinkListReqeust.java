@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CooperationProductListLinkReqeust {
+public class LinkListReqeust {
 	String StandardProductSeq;
 	CooperationProductIDRequest[] cooperationProductID;
 }

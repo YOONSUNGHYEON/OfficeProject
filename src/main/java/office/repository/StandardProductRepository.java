@@ -42,4 +42,6 @@ public interface StandardProductRepository extends PagingAndSortingRepository<St
 	 */
 	StandardProduct findBySeq(String seq);
 
+	StandardProduct getOne(String standardProductSeq);
+
 }

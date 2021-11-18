@@ -43,10 +43,6 @@ public class CooperationProduct implements Serializable{
 	private CooperationCompany cooperationCompany;
 
 	@ManyToOne
-    @JoinColumn(name="sStandardProductSeq")
-	private StandardProduct standardProduct;
-
-	@ManyToOne
 	@JoinColumn(name = "nCategorySeq")
 	private Category category;
 
@@ -75,7 +71,6 @@ public class CooperationProduct implements Serializable{
     			.cooperationCompanyName(cooperationCompany.getName())
     			.cooperationProductSeq(cooperationProductSeq)
     			.categoryName(category.getName())
-    			.standardProduct(standardProduct)
     			.name(name)
     			.imageURL(imageURL)
     			.URL(URL)
@@ -85,15 +80,14 @@ public class CooperationProduct implements Serializable{
     			.build();
     }
 
-    public CooperationProduct updateStandardProduct(StandardProduct standardProduct) {
-    	this.standardProduct = standardProduct;
-    	return this;
-    }
 
     public String inputDateFormat(Date inputDate) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd"); //원하는 데이터 포맷 지정
 		return simpleDateFormat.format(inputDate);
 	}
+
+
+
 
 
 }

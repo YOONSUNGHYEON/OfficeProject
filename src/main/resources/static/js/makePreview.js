@@ -10,7 +10,7 @@ $(document).ready(function() {
 		if (ok!=true) {
 			imgURL = '/image/noImage.jpg';
 		} else {
-			imgURL = 'http://192.168.56.106/DanawaOfficeProject/image/' + imgURL;
+			imgURL = 'http://192.168.0.53/DanawaOfficeProject/image/' + imgURL;
 		}
 		$("body").append('<img id="preview" src="' + imgURL + '"  class="previewImg" >');
 		$("#preview")
