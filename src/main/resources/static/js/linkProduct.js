@@ -281,6 +281,7 @@ function ajaxCooperationProducts(url) {
 		url: url,
 		dataType: "json",
 		success: function(response) {
+			console.log(response);
 			let currentPage = response['page']['pageable']['pageNumber'];
 			makeCooperationProductThead(currentPage, makesortOrderArr(response['sortOrder']));
 			makeCooperationProductTbody(response['page']['content']);

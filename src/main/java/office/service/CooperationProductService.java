@@ -74,12 +74,12 @@ public class CooperationProductService {
 	 * @param multiSortOrderStr 다중 정렬 할 칼럼의 코드와 나열 순서가 한 묶음으로 무작위로 이어져있는 문자열 형태 ex)
 	 *                          5:1,1:2,3:2
 	 * @return Page
-	 */
+
 	public Page<CooperationProductResponse> findLinkProductByCategory(int categorySeq, int page, String multiSortOrderStr) {
 		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findAllByCategorySeqAndStandardProductSeqNotNull(categorySeq, PageRequest.of(page, 20, getSort(multiSortOrderStr)));
 		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductPage.map(cooperationProduct -> cooperationProduct.toDTO());
 		return cooperationProductResponse;
-	}
+	}*/
 	/**
 	 * 카테고리에 해당하는 링크 안된 협력사 상품 목록을 조회
 	 *
@@ -89,7 +89,8 @@ public class CooperationProductService {
 	 * @return Page
 	 */
 	public Page<CooperationProductResponse> findUnlinkProductByCategory(long categorySeq,int page, String multiSortOrderStr) {
-		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findAllByCategorySeqAndStandardProductSeq(categorySeq, null, PageRequest.of(page, 20, getSort(multiSortOrderStr)));
+		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findAllByCategorySeq(categorySeq, PageRequest.of(page, 20, getSort(multiSortOrderStr)));
+
 		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductPage.map(cooperationProduct -> cooperationProduct.toDTO());
 		return cooperationProductResponse;
 
@@ -102,12 +103,12 @@ public class CooperationProductService {
 	 * @param multiSortOrderStr 다중 정렬 할 칼럼의 코드와 나열 순서가 한 묶음으로 무작위로 이어져있는 문자열 형태 ex)
 	 *                          5:1,1:2,3:2
 	 * @return Page
-	 */
+
 	public Page<CooperationProductResponse> findByStandardProductSeq(String standardProductSeq, String multiSortOrderStr) {
 		Page<CooperationProduct> cooperationProductPage = cooperationProductRepository.findByStandardProductSeq(standardProductSeq, PageRequest.of(0, 20, getSort(multiSortOrderStr)));
 		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductPage.map(cooperationProduct -> cooperationProduct.toDTO());
 		return cooperationProductResponse;
-	}
+	}*/
 
 
 

@@ -4,13 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import office.dto.SearchRequest;
-import office.dto.cooperationProduct.CooperationProductListResponse;
-import office.dto.cooperationProduct.CooperationProductResponse;
 import office.dto.standardProduct.StandardProductListResponse;
 import office.dto.standardProduct.StandardProductResponse;
 import office.service.CooperationProductService;
@@ -62,12 +59,12 @@ public class StandardProductController {
 	 *
 	 * @param standardProductSeq
 	 * @return
-	 */
+
 	@GetMapping(value = "/standardProduct/{standardProductSeq}")
 	public CooperationProductListResponse findLinkedCooperationProductList(@PathVariable("standardProductSeq") String standardProductSeq, SearchRequest searchRequest) {
 		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findByStandardProductSeq(standardProductSeq, searchRequest.getSortOrder());
 		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
 		return cooperationProductListResponse;
 
-	}
+	} */
 }

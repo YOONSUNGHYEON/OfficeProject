@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import office.dto.sort.OrderEnum;
 import office.dto.sort.StandardProductSortEnum;
 import office.dto.standardProduct.StandardProductResponse;
-import office.entity.CooperationProduct;
 import office.entity.StandardProduct;
 import office.repository.CooperationProductRepository;
 import office.repository.StandardProductRepository;
@@ -118,37 +117,6 @@ public class StandardProductService {
 		return standardProduct.toDTO();
 	}
 
-	/**
-	 * 최저가 갱신 프로그램
-	 *
-	 * @param standardProductSeq 갱신할 기준 상품 seq
-	 */
-	public void findLowestPrice(String standardProductSeq) {
-		StandardProduct standardProduct = standardProductRepository.findBySeq(standardProductSeq);
-		ArrayList<CooperationProduct> cooperationProductList = cooperationProductRepository.findByStandardProductSeq(standardProductSeq);
-		int minPrice = 0;
-		int minMobilePrice = 0;
-		int averagePrice = 0;
-		for (int i = 0; i < cooperationProductList.size(); i++) {
-			averagePrice += cooperationProductList.get(i).getPrice();
-			if (i == 0) {
-				minPrice = cooperationProductList.get(0).getPrice();
-				minMobilePrice = cooperationProductList.get(0).getMobilePrice();
-			} else {
-				if (minPrice > cooperationProductList.get(i).getPrice()) {
-					minPrice = cooperationProductList.get(i).getPrice();
-				} else if (minMobilePrice > cooperationProductList.get(i).getMobilePrice()) {
-					minMobilePrice = cooperationProductList.get(i).getMobilePrice();
-				}
-			}
-		}
-		try {
-			averagePrice = averagePrice / cooperationProductList.size();
-		} catch (ArithmeticException e) {
-			averagePrice = 0;
-		}
-		StandardProduct newStandardProduct = standardProduct.updatePrice(StandardProduct.builder().cooperationCompanyCount(cooperationProductList.size()).lowestPrice(minPrice).mobileLowestPrice(minMobilePrice).averagePrice(averagePrice).combinedLowestPrice(minPrice < minMobilePrice ? minPrice : minMobilePrice).build());
-		standardProductRepository.save(newStandardProduct);
-	}
+
 
 }

@@ -39,7 +39,7 @@ public class CooperationProduct implements Serializable{
 
 	@Id
 	@ManyToOne
-	@JoinColumn(name="sCooperationCompanySeq", updatable=false)
+	@JoinColumn(name="sCooperationCompanySeq",  updatable=false)
 	private CooperationCompany cooperationCompany;
 
 	@ManyToOne

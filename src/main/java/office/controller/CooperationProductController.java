@@ -45,13 +45,13 @@ public class CooperationProductController {
 	 *
 	 * @param searchRequest
 	 * @return cooperationProductListResponse
-	 */
+
 	@GetMapping("/cooperationProducts/link")
 	public CooperationProductListResponse findLinkProductByCategory(SearchRequest searchRequest) {
 		Page<CooperationProductResponse> cooperationProductResponse = cooperationProductService.findLinkProductByCategory(searchRequest.getCategorySeq(), searchRequest.getPage(), searchRequest.getSortOrder());
 		CooperationProductListResponse cooperationProductListResponse = new CooperationProductListResponse(searchRequest.getSortOrder(), cooperationProductResponse, 200, "조회 성공했습니다.");
 		return cooperationProductListResponse;
-	}
+	}*/
 
 	/**
 	 * 링크 생성하기
@@ -62,7 +62,6 @@ public class CooperationProductController {
 	@PostMapping("/cooperationProducts/link")
 	public ResultResponse link(@RequestBody LinkListReqeust linkListReqeust) {
 		ResultResponse response = null;
-		String standardProductSeq = linkListReqeust.getStandardProductSeq();
 		for (int i = 0; i < linkListReqeust.getCooperationProductID().length; i++) {
 			LinkReqeust linkReqeust = new  LinkReqeust(linkListReqeust.getStandardProductSeq(),
 						linkListReqeust.getCooperationProductID()[i].getCooperationProductSeq(),
